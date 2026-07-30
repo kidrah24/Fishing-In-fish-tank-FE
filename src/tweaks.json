@@ -1,0 +1,62 @@
+{
+  "roundDuration": {
+    "type": "number",
+    "value": 60,
+    "min": 30,
+    "max": 120,
+    "step": 5,
+    "name": "Round Duration",
+    "group": "gameplay",
+    "index": 1
+  },
+  "fishCount": {
+    "type": "number",
+    "value": 12,
+    "min": 9,
+    "max": 18,
+    "step": 1,
+    "name": "Fish Count",
+    "group": "gameplay",
+    "index": 2
+  },
+  "dropSpeed": {
+    "type": "number",
+    "value": 195,
+    "min": 100,
+    "max": 320,
+    "step": 5,
+    "name": "Hook Drop Speed",
+    "group": "gameplay",
+    "index": 3
+  },
+  "reelSpeed": {
+    "type": "number",
+    "value": 430,
+    "min": 240,
+    "max": 650,
+    "step": 10,
+    "name": "Reel Speed",
+    "group": "gameplay",
+    "index": 4
+  },
+  "effectsIntensity": {
+    "type": "number",
+    "value": 1,
+    "min": 0.25,
+    "max": 1.75,
+    "step": 0.05,
+    "name": "Effects Intensity",
+    "group": "visual",
+    "index": 1
+  },
+  "musicVolume": {
+    "type": "number",
+    "value": 0.12,
+    "min": 0,
+    "max": 0.3,
+    "step": 0.01,
+    "name": "Music Volume",
+    "group": "audio",
+    "index": 1
+  }
+}

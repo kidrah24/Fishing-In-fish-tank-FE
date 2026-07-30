@@ -1,0 +1,22 @@
+{
+  "AQUARIUM_BG": "/generated-assets/aquarium_bg.webp",
+  "ANGRY_FISH": "/generated-assets/assets/angry_fish.png",
+  "CRAB": "/generated-assets/assets/crab.png",
+  "ELECTRIC_FISH": "/generated-assets/assets/electric_fish.png",
+  "EMBER_FISH": "/generated-assets/assets/ember_fish.png",
+  "FISH_FOOD": "/generated-assets/assets/fish_food.png",
+  "HOOK_BAIT": "/generated-assets/assets/hook_bait.png",
+  "LEMON_TANG": "/generated-assets/assets/lemon_tang.png",
+  "MINI_SHARK": "/generated-assets/assets/mini_shark.png",
+  "NEON_TETRA": "/generated-assets/assets/neon_tetra.png",
+  "OCTOPUS": "/generated-assets/assets/octopus.png",
+  "PEARL_KOI": "/generated-assets/assets/pearl_koi.png",
+  "PIRATE_TREASURE": "/generated-assets/assets/pirate_treasure.png",
+  "PUFFER_FISH": "/generated-assets/assets/puffer_fish.png",
+  "RAINBOW_FISH": "/generated-assets/assets/rainbow_fish.png",
+  "ROYAL_BETA": "/generated-assets/assets/royal_beta.png",
+  "SCHOOL_FISH": "/generated-assets/assets/school_fish.png",
+  "SPECTRAL_PEARL": "/generated-assets/assets/spectral_pearl.png",
+  "TIMID_FISH": "/generated-assets/assets/timid_fish.png"
+}
+

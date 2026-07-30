@@ -1,0 +1,6 @@
+{
+  "frames": [
+    { "name": "fish_food", "source": { "x": 0, "y": 0, "w": 120, "h": 96 }, "anchor": { "x": 60, "y": 48 } },
+    { "name": "pirate_treasure", "source": { "x": 120, "y": 0, "w": 120, "h": 96 }, "anchor": { "x": 60, "y": 48 } }
+  ]
+}

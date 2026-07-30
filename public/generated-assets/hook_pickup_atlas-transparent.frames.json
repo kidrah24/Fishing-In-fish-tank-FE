@@ -1,0 +1,6 @@
+{
+  "frames": [
+    { "name": "hook_bait", "source": { "x": 0, "y": 0, "w": 80, "h": 64 }, "anchor": { "x": 40, "y": 32 } },
+    { "name": "spectral_pearl", "source": { "x": 80, "y": 0, "w": 80, "h": 64 }, "anchor": { "x": 40, "y": 32 } }
+  ]
+}

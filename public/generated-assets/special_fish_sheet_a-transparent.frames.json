@@ -1,0 +1,39 @@
+{
+  "animations": [
+    {
+      "name": "timid_fish",
+      "frames": [
+        { "source": { "x": 0, "y": 0, "w": 140, "h": 110 }, "anchor": { "x": 70, "y": 55 } },
+        { "source": { "x": 140, "y": 0, "w": 140, "h": 110 }, "anchor": { "x": 70, "y": 55 } }
+      ]
+    },
+    {
+      "name": "angry_fish",
+      "frames": [
+        { "source": { "x": 0, "y": 110, "w": 140, "h": 110 }, "anchor": { "x": 70, "y": 55 } },
+        { "source": { "x": 140, "y": 110, "w": 140, "h": 110 }, "anchor": { "x": 70, "y": 55 } }
+      ]
+    },
+    {
+      "name": "electric_fish",
+      "frames": [
+        { "source": { "x": 0, "y": 220, "w": 140, "h": 110 }, "anchor": { "x": 70, "y": 55 } },
+        { "source": { "x": 140, "y": 220, "w": 140, "h": 110 }, "anchor": { "x": 70, "y": 55 } }
+      ]
+    },
+    {
+      "name": "puffer_fish",
+      "frames": [
+        { "source": { "x": 0, "y": 330, "w": 140, "h": 110 }, "anchor": { "x": 70, "y": 55 } },
+        { "source": { "x": 140, "y": 330, "w": 140, "h": 110 }, "anchor": { "x": 70, "y": 55 } }
+      ]
+    },
+    {
+      "name": "mini_shark",
+      "frames": [
+        { "source": { "x": 0, "y": 440, "w": 140, "h": 110 }, "anchor": { "x": 70, "y": 55 } },
+        { "source": { "x": 140, "y": 440, "w": 140, "h": 110 }, "anchor": { "x": 70, "y": 55 } }
+      ]
+    }
+  ]
+

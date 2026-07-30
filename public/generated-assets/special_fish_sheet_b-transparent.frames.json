@@ -1,0 +1,32 @@
+{
+  "animations": [
+    {
+      "name": "crab",
+      "frames": [
+        { "source": { "x": 0, "y": 0, "w": 140, "h": 110 }, "anchor": { "x": 70, "y": 55 } },
+        { "source": { "x": 140, "y": 0, "w": 140, "h": 110 }, "anchor": { "x": 70, "y": 55 } }
+      ]
+    },
+    {
+      "name": "school_fish",
+      "frames": [
+        { "source": { "x": 0, "y": 110, "w": 140, "h": 110 }, "anchor": { "x": 70, "y": 55 } },
+        { "source": { "x": 140, "y": 110, "w": 140, "h": 110 }, "anchor": { "x": 70, "y": 55 } }
+      ]
+    },
+    {
+      "name": "ghost_fish",
+      "frames": [
+        { "source": { "x": 0, "y": 220, "w": 140, "h": 110 }, "anchor": { "x": 70, "y": 55 } },
+        { "source": { "x": 140, "y": 220, "w": 140, "h": 110 }, "anchor": { "x": 70, "y": 55 } }
+      ]
+    },
+    {
+      "name": "rainbow_fish",
+      "frames": [
+        { "source": { "x": 0, "y": 330, "w": 140, "h": 110 }, "anchor": { "x": 70, "y": 55 } },
+        { "source": { "x": 140, "y": 330, "w": 140, "h": 110 }, "anchor": { "x": 70, "y": 55 } }
+      ]
+    }
+  ]
+
