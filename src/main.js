@@ -2,6 +2,7 @@ import sdk from "@playabl/sdk";
 import { createGame } from "./game/game.js";
 import tweaksManifest from "./tweaks.json";
 import assetsManifest from "./assets.json";
+import "./posthog.js";
 import "./styles.css";
 
 const app = document.querySelector("#app");

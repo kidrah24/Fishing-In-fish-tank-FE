@@ -296,8 +296,8 @@ export function createSimulation(config, events) {
     addBurst(state.hook.x, surfaceY() + 28, fish.species.behavior === "ghost" ? "#d9bcff" : "#fff2a8", 26);
     fish.respawn = 0.8;
     fish.caught = false;
+    events.onCatch?.(fish.species, state.combo, gained, state.score);
     state.hook.caught = null;
-    events.onCatch?.(state.combo, gained, state.score);
   }
 
   function finishCast() {

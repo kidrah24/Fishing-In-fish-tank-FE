@@ -1,3 +1,4 @@
+import posthog from "../posthog.js";
 import { createAudioController } from "./audio.js";
 import { createInput } from "./input.js";
 import { createRenderer } from "./renderer.js";
@@ -50,9 +51,23 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
           sound.catch(1);
           if (sdk.device.haptics.isSupported()) void sdk.device.haptics.vibrate(25).catch(() => {});
         },
-        onCatch: (combo) => sound.catch(combo),
+        onCatch: (species, combo, pointsEarned, score) => {
+          sound.catch(combo);
+          posthog?.capture("fish_caught", {
+            fish_species: species.name,
+            fish_behavior: species.behavior,
+            combo,
+            points_earned: pointsEarned,
+            score,
+          });
+        },
         onSpecial: (type) => {
           sound.special(type);
+          if (type === "power") {
+            posthog?.capture("power_up_collected", { power_up: "spectral_pearl" });
+          } else if (type === "treasure") {
+            posthog?.capture("treasure_collected", { points_earned: 400 });
+          }
           if (sdk.device.haptics.isSupported()) void sdk.device.haptics.vibrate(type === "zap" ? [25, 35, 25] : 20).catch(() => {});
         },
         onEvent: (type) => {
@@ -62,6 +77,11 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
         onEnd: (score) => {
           const isBest = score > bestScore;
           bestScore = Math.max(bestScore, score);
+          posthog?.capture("game_round_completed", {
+            score,
+            is_new_best: isBest,
+            best_score: bestScore,
+          });
           ui.showResults(score, bestScore, isBest);
           void sdk.gameState.save({ version: 1, bestScore }).catch(() => {});
           void sdk.leaderboard.submit(Math.max(0, Math.min(score, Number.MAX_SAFE_INTEGER))).catch(() => {});
