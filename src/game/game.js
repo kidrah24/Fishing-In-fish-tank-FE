@@ -104,9 +104,10 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
           raf = requestAnimationFrame(loop);
           return;
         }
-        const dt = Math.min(0.033, (now - lastTime) / 1000);
+        const guideActive = ui.isGuideOpen();
+        const dt = guideActive ? 0 : Math.min(0.033, (now - lastTime) / 1000);
         lastTime = now;
-        simulation?.update(dt, input.state);
+        if (!guideActive) simulation?.update(dt, input.state);
         if (simulation && renderer) {
           ui.update(simulation.state);
           renderer.render(simulation.state, simulation.surfaceY(), now / 1000);
@@ -117,6 +118,7 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
       function beginRound() {
         if (!ready) return;
         ui.hideResults();
+        ui.closeGuide();
         simulation.reset();
         ui.showHint();
         lastTime = performance.now();
@@ -126,8 +128,19 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
         if (!ready || started) return;
         started = true;
         ui.hideStart();
+        ui.closeGuide();
         sound.unlock();
         beginRound();
+      }
+
+      function handleGuidePlay(e) {
+        e?.stopPropagation();
+        ui.closeGuide();
+        if (!started) {
+          activate();
+        } else if (!simulation?.state.running) {
+          beginRound();
+        }
       }
 
       function toggleSound() {
@@ -136,10 +149,19 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
         elements.sound.setAttribute("aria-label", muted ? "Unmute sound" : "Mute sound");
       }
 
-      elements.start.addEventListener("pointerup", activate);
-      elements.start.addEventListener("click", activate);
+      elements.start.addEventListener("pointerup", (e) => {
+        if (e.target.closest("[data-open-guide]")) return;
+        activate();
+      });
+      elements.start.addEventListener("click", (e) => {
+        if (e.target.closest("[data-open-guide]")) return;
+        activate();
+      });
       elements.replay.addEventListener("click", beginRound);
       elements.sound.addEventListener("click", toggleSound);
+      if (elements.guidePlay) {
+        elements.guidePlay.addEventListener("click", handleGuidePlay);
+      }
 
       const getAsset = (key, fallback) => {
         try {
@@ -192,9 +214,6 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
         resize();
         ready = true;
         ui.setReady();
-        requestAnimationFrame(() => {
-          if (!started) activate();
-        });
       }).catch((err) => {
         console.error("Asset loading error:", err);
         ui.setError();
