@@ -1,9 +1,12 @@
 import sdk from "@playabl/sdk";
+import { inject as injectVercelAnalytics } from "@vercel/analytics";
 import { createGame } from "./game/game.js";
 import tweaksManifest from "./tweaks.json";
 import assetsManifest from "./assets.json";
 import "./posthog.js";
 import "./styles.css";
+
+injectVercelAnalytics();
 
 const app = document.querySelector("#app");
 const ready = await sdk.ready();
