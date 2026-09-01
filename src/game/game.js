@@ -128,6 +128,12 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
 
       function activate() {
         if (!ready || started) return;
+        const enteredName = ui.getStartNameInput();
+        if (enteredName) {
+          setPlayerName(enteredName);
+        } else if (!getPlayerName()) {
+          setPlayerName("Angler 1");
+        }
         started = true;
         ui.hideStart();
         ui.closeGuide();
@@ -151,12 +157,22 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
         elements.sound.setAttribute("aria-label", muted ? "Unmute sound" : "Mute sound");
       }
 
-      elements.start.addEventListener("pointerup", (e) => {
-        if (e.target.closest("[data-open-guide]")) return;
-        activate();
-      });
+      if (elements.startPlayBtn) {
+        elements.startPlayBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          activate();
+        });
+      }
+      if (elements.startNameInput) {
+        elements.startNameInput.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            activate();
+          }
+        });
+      }
       elements.start.addEventListener("click", (e) => {
-        if (e.target.closest("[data-open-guide]")) return;
+        if (e.target.closest("[data-open-guide]") || e.target.closest("input")) return;
         activate();
       });
       elements.replay.addEventListener("click", beginRound);
@@ -167,10 +183,11 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
       if (elements.editNameBtn) {
         elements.editNameBtn.addEventListener("click", (e) => {
           e.stopPropagation();
-          const current = getPlayerName();
+          const current = getPlayerName() || "Angler 1";
           const next = window.prompt("Enter your player name for the global leaderboard:", current);
           if (next !== null && next.trim()) {
             setPlayerName(next.trim());
+            ui.setStartNameInput(next.trim());
             const currentScore = simulation?.state.score || 0;
             const lbData = recordScore(currentScore);
             ui.showResults(lbData);
@@ -229,6 +246,7 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
         resizeObserver.observe(shell);
         resize();
         ready = true;
+        ui.setStartNameInput(getPlayerName());
         ui.setReady();
       }).catch((err) => {
         console.error("Asset loading error:", err);

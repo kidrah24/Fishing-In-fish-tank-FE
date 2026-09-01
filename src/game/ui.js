@@ -14,12 +14,31 @@ export function createUI(shell) {
     <div class="badge event-banner" data-event hidden></div>
     <div class="hint" data-hint>Watch their tells · every fish behaves differently</div>
     <div class="start-overlay" data-start>
-      <div class="start-copy">
+      <div class="start-card">
         <h1>Tank &amp; Tackle</h1>
         <p class="start-tagline">60s Aquarium Fishing Challenge</p>
-        <button class="start-guide-btn" type="button" data-open-guide>📖 How to Play &amp; Fish Points</button>
-        <br />
-        <p data-start-label>Loading the aquarium…</p>
+
+        <div class="start-name-card">
+          <label for="start-name-input" class="start-name-label">🎮 ENTER YOUR ANGLER NAME</label>
+          <div class="start-name-wrapper">
+            <span class="start-name-icon">🎣</span>
+            <input
+              type="text"
+              id="start-name-input"
+              class="start-name-input"
+              data-start-name-input
+              placeholder="Enter your name..."
+              maxlength="16"
+              autocomplete="off"
+            />
+          </div>
+        </div>
+
+        <div class="start-buttons-row">
+          <button class="start-play-btn" type="button" data-start-play>Play Game 🎣</button>
+          <button class="start-guide-btn" type="button" data-open-guide>📖 How to Play</button>
+        </div>
+        <p data-start-label class="start-status-label">Loading the aquarium…</p>
       </div>
     </div>
 
@@ -273,6 +292,8 @@ export function createUI(shell) {
     hint: shell.querySelector("[data-hint]"),
     start: shell.querySelector("[data-start]"),
     startLabel: shell.querySelector("[data-start-label]"),
+    startNameInput: shell.querySelector("[data-start-name-input]"),
+    startPlayBtn: shell.querySelector("[data-start-play]"),
     result: shell.querySelector("[data-result]"),
     resultScore: shell.querySelector("[data-result-score]"),
     alltimeScore: shell.querySelector("[data-alltime-score]"),
@@ -392,7 +413,9 @@ export function createUI(shell) {
     isGuideOpen: () => isGuideOpen,
     openGuide,
     closeGuide,
-    setReady() { elements.startLabel.textContent = "Tap to fish"; elements.start.classList.add("is-ready"); },
+    getStartNameInput() { return elements.startNameInput?.value.trim() || ""; },
+    setStartNameInput(val) { if (elements.startNameInput) elements.startNameInput.value = val; },
+    setReady() { elements.startLabel.textContent = "Ready!"; elements.start.classList.add("is-ready"); },
     setError() { elements.startLabel.textContent = "Aquarium could not load"; },
     hideStart() { elements.start.hidden = true; },
     update(state) {

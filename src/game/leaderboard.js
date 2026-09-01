@@ -20,15 +20,15 @@ const DEFAULT_ENTRIES = [
 
 export function getPlayerName() {
   try {
-    return localStorage.getItem(NAME_KEY) || "Player 1";
+    return localStorage.getItem(NAME_KEY) || "";
   } catch (err) {
     console.warn("Could not read player name:", err);
-    return "Player 1";
+    return "";
   }
 }
 
 export function setPlayerName(name) {
-  const clean = name.trim().slice(0, 16) || "Player 1";
+  const clean = name.trim().slice(0, 16) || "Angler 1";
   try {
     localStorage.setItem(NAME_KEY, clean);
   } catch (err) {
@@ -59,7 +59,7 @@ export function saveLeaderboard(entries) {
 }
 
 export function recordScore(score) {
-  const playerName = getPlayerName();
+  const playerName = getPlayerName() || "Angler 1";
   const entries = loadLeaderboard();
   
   // Find existing entry for this user or create a new one
