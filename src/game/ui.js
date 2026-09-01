@@ -249,7 +249,7 @@ export function createUI(shell) {
           <div class="summary-card record-card">
             <span class="card-label">👑 ALL-TIME RECORD</span>
             <strong data-alltime-score>0</strong>
-            <span class="card-sub" data-alltime-holder>by SpectralKing</span>
+            <span class="card-sub" data-alltime-holder>by —</span>
           </div>
 
           <div class="summary-card rank-card">
@@ -357,6 +357,17 @@ export function createUI(shell) {
       }
     }
 
+    if (displayEntries.length === 0) {
+      elements.lbList.innerHTML = `
+        <div class="lb-empty-msg">
+          <span class="lb-empty-icon">🏆</span>
+          <p>No high scores recorded yet.</p>
+          <small>Play a round to claim the #1 spot!</small>
+        </div>
+      `;
+      return;
+    }
+
     elements.lbList.innerHTML = displayEntries
       .map((entry) => {
         const isTop3 = entry.rank <= 3;
@@ -454,8 +465,8 @@ export function createUI(shell) {
     showResults(lbData) {
       currentLbData = lbData;
       elements.resultScore.textContent = lbData.currentScore.toLocaleString();
-      elements.alltimeScore.textContent = lbData.allTimeHighScore.toLocaleString();
-      elements.alltimeHolder.textContent = `by ${lbData.allTimeLeader}`;
+      elements.alltimeScore.textContent = lbData.allTimeHighScore ? lbData.allTimeHighScore.toLocaleString() : "0";
+      elements.alltimeHolder.textContent = lbData.allTimeLeader ? `by ${lbData.allTimeLeader}` : "by —";
       elements.userRank.textContent = `#${lbData.userRank}`;
       elements.rankSub.textContent = lbData.isNewRecord
         ? "🎉 NEW ALL-TIME RECORD!"

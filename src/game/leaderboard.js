@@ -1,22 +1,22 @@
-const STORAGE_KEY = "tank_tackle_leaderboard_v2";
+const STORAGE_KEY = "tank_tackle_leaderboard_v3";
 const NAME_KEY = "tank_tackle_player_name";
 
-const DEFAULT_ENTRIES = [
-  { name: "SpectralKing", score: 4850, avatar: "👑" },
-  { name: "ApexFisher", score: 4220, avatar: "🦈" },
-  { name: "ElectroCaptain", score: 3890, avatar: "⚡" },
-  { name: "PufferPro", score: 3450, avatar: "🐡" },
-  { name: "TackleMaster", score: 3100, avatar: "⚓" },
-  { name: "WaveRunner", score: 2780, avatar: "🌊" },
-  { name: "PearlHunter", score: 2450, avatar: "💎" },
-  { name: "GoldfishWhisperer", score: 2120, avatar: "🐟" },
-  { name: "OctoDodger", score: 1890, avatar: "🦑" },
-  { name: "BaitCatcher", score: 1650, avatar: "🎯" },
-  { name: "ReefChallenger", score: 1420, avatar: "🏆" },
-  { name: "DeepSeaScout", score: 1180, avatar: "🎣" },
-  { name: "TidalWave", score: 950, avatar: "🌊" },
-  { name: "AquariumRookie", score: 720, avatar: "🌟" },
-];
+const DUMMY_NAMES = new Set([
+  "SpectralKing",
+  "ApexFisher",
+  "ElectroCaptain",
+  "PufferPro",
+  "TackleMaster",
+  "WaveRunner",
+  "PearlHunter",
+  "GoldfishWhisperer",
+  "OctoDodger",
+  "BaitCatcher",
+  "ReefChallenger",
+  "DeepSeaScout",
+  "TidalWave",
+  "AquariumRookie",
+]);
 
 export function getPlayerName() {
   try {
@@ -42,12 +42,14 @@ export function loadLeaderboard() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      if (Array.isArray(parsed)) {
+        return parsed.filter((e) => e && e.name && !DUMMY_NAMES.has(e.name));
+      }
     }
   } catch (err) {
     console.warn("Could not load leaderboard:", err);
   }
-  return [...DEFAULT_ENTRIES];
+  return [];
 }
 
 export function saveLeaderboard(entries) {
