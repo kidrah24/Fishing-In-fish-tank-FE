@@ -4,6 +4,7 @@ import { createInput } from "./input.js";
 import { createRenderer } from "./renderer.js";
 import { createSimulation } from "./simulation.js";
 import { createUI } from "./ui.js";
+import { recordScore, getPlayerName, setPlayerName } from "./leaderboard.js";
 
 function loadImage(url) {
   return new Promise((resolve, reject) => {
@@ -75,14 +76,15 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
           if (sdk.device.haptics.isSupported()) void sdk.device.haptics.vibrate([18, 32, 18]).catch(() => {});
         },
         onEnd: (score) => {
-          const isBest = score > bestScore;
-          bestScore = Math.max(bestScore, score);
+          const lbData = recordScore(score);
+          bestScore = Math.max(bestScore, lbData.userBest);
           posthog?.capture("game_round_completed", {
             score,
-            is_new_best: isBest,
+            is_new_best: lbData.isNewRecord,
             best_score: bestScore,
+            user_rank: lbData.userRank,
           });
-          ui.showResults(score, bestScore, isBest);
+          ui.showResults(lbData);
           void sdk.gameState.save({ version: 1, bestScore }).catch(() => {});
           void sdk.leaderboard.submit(Math.max(0, Math.min(score, Number.MAX_SAFE_INTEGER))).catch(() => {});
         },
@@ -161,6 +163,19 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
       elements.sound.addEventListener("click", toggleSound);
       if (elements.guidePlay) {
         elements.guidePlay.addEventListener("click", handleGuidePlay);
+      }
+      if (elements.editNameBtn) {
+        elements.editNameBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const current = getPlayerName();
+          const next = window.prompt("Enter your player name for the global leaderboard:", current);
+          if (next !== null && next.trim()) {
+            setPlayerName(next.trim());
+            const currentScore = simulation?.state.score || 0;
+            const lbData = recordScore(currentScore);
+            ui.showResults(lbData);
+          }
+        });
       }
 
       const getAsset = (key, fallback) => {

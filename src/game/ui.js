@@ -208,12 +208,55 @@ export function createUI(shell) {
     </div>
 
     <div class="result-overlay" data-result hidden>
-      <div class="result-panel">
-        <span class="result-kicker">TIME'S UP</span>
-        <strong data-result-score>0</strong>
-        <span data-best>Best 0</span>
+      <div class="result-card">
+        <div class="result-header">
+          <div class="result-title-group">
+            <span class="result-kicker">TIME'S UP! ⏱️</span>
+            <h2>Game Results</h2>
+          </div>
+          <button class="name-edit-btn" type="button" data-edit-name title="Tap to change player name">
+            ✏️ <span data-player-name-display>Player 1</span>
+          </button>
+        </div>
+
+        <!-- Top Summary Cards (Current Score, All-Time High Score, Global Rank) -->
+        <div class="result-summary-grid">
+          <div class="summary-card score-card">
+            <span class="card-label">YOUR SCORE</span>
+            <strong data-result-score>0</strong>
+            <span class="card-sub">PTS</span>
+          </div>
+          
+          <div class="summary-card record-card">
+            <span class="card-label">👑 ALL-TIME RECORD</span>
+            <strong data-alltime-score>0</strong>
+            <span class="card-sub" data-alltime-holder>by SpectralKing</span>
+          </div>
+
+          <div class="summary-card rank-card">
+            <span class="card-label">YOUR RANK</span>
+            <strong data-user-rank>#1</strong>
+            <span class="card-sub" data-rank-sub>Global Position</span>
+          </div>
+        </div>
+
+        <!-- Global Leaderboard Section -->
+        <div class="leaderboard-section">
+          <div class="leaderboard-header">
+            <h3>🏆 Global High Scores</h3>
+            <div class="leaderboard-tabs">
+              <button class="lb-tab is-active" data-lb-tab="top" type="button">Top 10</button>
+              <button class="lb-tab" data-lb-tab="near" type="button">Near You</button>
+            </div>
+          </div>
+
+          <div class="leaderboard-list" data-lb-list>
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
         <div class="result-actions">
-          <button class="replay-button" type="button" data-replay>Fish again</button>
+          <button class="replay-button" type="button" data-replay>Fish again 🎣</button>
           <button class="guide-button-secondary" type="button" data-open-guide>📖 Fish Guide</button>
         </div>
       </div>
@@ -232,7 +275,14 @@ export function createUI(shell) {
     startLabel: shell.querySelector("[data-start-label]"),
     result: shell.querySelector("[data-result]"),
     resultScore: shell.querySelector("[data-result-score]"),
-    best: shell.querySelector("[data-best]"),
+    alltimeScore: shell.querySelector("[data-alltime-score]"),
+    alltimeHolder: shell.querySelector("[data-alltime-holder]"),
+    userRank: shell.querySelector("[data-user-rank]"),
+    rankSub: shell.querySelector("[data-rank-sub]"),
+    playerNameDisplay: shell.querySelector("[data-player-name-display]"),
+    editNameBtn: shell.querySelector("[data-edit-name]"),
+    lbList: shell.querySelector("[data-lb-list]"),
+    lbTabs: shell.querySelectorAll("[data-lb-tab]"),
     replay: shell.querySelector("[data-replay]"),
     sound: shell.querySelector("[data-sound]"),
     guide: shell.querySelector("[data-guide]"),
@@ -245,8 +295,10 @@ export function createUI(shell) {
 
   let hintTimer = 0;
   let isGuideOpen = false;
+  let currentLbData = null;
+  let activeLbTab = "top";
 
-  // Tab switching handler
+  // Tab switching handler for Guide
   elements.tabs.forEach((tab) => {
     tab.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -255,6 +307,61 @@ export function createUI(shell) {
       elements.sections.forEach((s) => s.classList.toggle("is-active", s.dataset.section === targetSection));
     });
   });
+
+  // Tab switching handler for Leaderboard
+  elements.lbTabs.forEach((tab) => {
+    tab.addEventListener("click", (e) => {
+      e.stopPropagation();
+      activeLbTab = tab.dataset.lbTab;
+      elements.lbTabs.forEach((t) => t.classList.toggle("is-active", t === tab));
+      renderLeaderboardRows();
+    });
+  });
+
+  function renderLeaderboardRows() {
+    if (!currentLbData || !elements.lbList) return;
+    const entries = currentLbData.entries || [];
+    let displayEntries = [...entries];
+
+    if (activeLbTab === "top") {
+      displayEntries = displayEntries.slice(0, 10);
+    } else if (activeLbTab === "near") {
+      const userIdx = entries.findIndex((e) => e.isUser);
+      if (userIdx >= 0) {
+        const start = Math.max(0, userIdx - 4);
+        const end = Math.min(entries.length, start + 10);
+        displayEntries = entries.slice(start, end);
+      } else {
+        displayEntries = displayEntries.slice(0, 10);
+      }
+    }
+
+    elements.lbList.innerHTML = displayEntries
+      .map((entry) => {
+        const isTop3 = entry.rank <= 3;
+        const medal = entry.rank === 1 ? "🥇" : entry.rank === 2 ? "🥈" : entry.rank === 3 ? "🥉" : `#${entry.rank}`;
+        return `
+          <div class="lb-row ${entry.isUser ? "is-user" : ""} ${isTop3 ? `top-${entry.rank}` : ""}">
+            <div class="lb-rank-col">
+              <span class="lb-rank-badge rank-${entry.rank}">${medal}</span>
+            </div>
+            <span class="lb-avatar">${entry.avatar || "🎣"}</span>
+            <div class="lb-info-col">
+              <div class="lb-name-row">
+                <strong class="lb-name">${escapeHtml(entry.name)}</strong>
+                ${entry.isUser ? '<span class="you-badge">YOU</span>' : ""}
+              </div>
+              <span class="lb-score-val">${entry.score.toLocaleString()} PTS</span>
+            </div>
+          </div>
+        `;
+      })
+      .join("");
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[m]);
+  }
 
   function openGuide() {
     isGuideOpen = true;
@@ -321,9 +428,20 @@ export function createUI(shell) {
       elements.hint.classList.add("is-visible");
       hintTimer = window.setTimeout(() => elements.hint.classList.remove("is-visible"), 4200);
     },
-    showResults(score, best, isBest) {
-      elements.resultScore.textContent = score.toLocaleString();
-      elements.best.textContent = isBest ? "New best!" : `Best ${best.toLocaleString()}`;
+    showResults(lbData) {
+      currentLbData = lbData;
+      elements.resultScore.textContent = lbData.currentScore.toLocaleString();
+      elements.alltimeScore.textContent = lbData.allTimeHighScore.toLocaleString();
+      elements.alltimeHolder.textContent = `by ${lbData.allTimeLeader}`;
+      elements.userRank.textContent = `#${lbData.userRank}`;
+      elements.rankSub.textContent = lbData.isNewRecord
+        ? "🎉 NEW ALL-TIME RECORD!"
+        : `You are #${lbData.userRank} of ${lbData.totalPlayers}`;
+      if (elements.playerNameDisplay) {
+        const playerName = lbData.entries.find((e) => e.isUser)?.name || "Player 1";
+        elements.playerNameDisplay.textContent = playerName;
+      }
+      renderLeaderboardRows();
       elements.result.hidden = false;
     },
     hideResults() { elements.result.hidden = true; },
