@@ -19,7 +19,7 @@ export function createUI(shell) {
         <p class="start-tagline">60s Aquarium Fishing Challenge</p>
 
         <div class="start-name-card">
-          <label for="start-name-input" class="start-name-label">🎮 ENTER YOUR ANGLER NAME</label>
+          <label for="start-name-input" class="start-name-label">🎮 ENTER YOUR NAME</label>
           <div class="start-name-wrapper">
             <span class="start-name-icon">🎣</span>
             <input
