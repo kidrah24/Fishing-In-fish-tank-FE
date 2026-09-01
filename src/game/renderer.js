@@ -136,7 +136,7 @@ export function createRenderer(canvas, images, config) {
     mini_shark: { img: images.miniShark, cols: 2, rows: 1 },
     crab: { img: images.crab, cols: 2, rows: 1 },
     school_fish: { img: images.schoolFish, cols: 2, rows: 1 },
-    ghost_fish: { img: images.timidFish || images.rainbowFish, cols: 2, rows: 1 },
+    ghost_fish: { img: images.ghostFish, cols: 1, rows: 1 },
     rainbow_fish: { img: images.rainbowFish, cols: 2, rows: 1 },
     neon_tetra: { img: images.neonTetra, cols: 4, rows: 1 },
     lemon_tang: { img: images.lemonTang, cols: 4, rows: 1 },
@@ -238,12 +238,13 @@ export function createRenderer(canvas, images, config) {
     const behavior = fish.species.behavior;
     const drawFish = { ...fish, x: fish.x + xOffset, y: fish.y + yOffset, size: fish.size * scale };
     let alpha = 1;
+    const isElectricZapping = behavior === "electric" && state.powerTime <= 0 && (((state.elapsed + fish.phase * 2) % 6.0) < 3.2);
 
     if (behavior === "ghost") {
       alpha = state.powerTime > 0 ? 0.95 : 0.43 + Math.sin(time * 4 + fish.phase) * 0.1;
       drawAura(drawFish.x, drawFish.y - drawFish.size * 0.42, drawFish.size * 0.75, state.powerTime > 0 ? "rgba(220,190,255,0.32)" : "rgba(210,196,255,0.16)");
     } else if (behavior === "electric") {
-      drawAura(drawFish.x, drawFish.y - drawFish.size * 0.4, drawFish.size * 0.65, "rgba(110,251,255,0.2)");
+      drawAura(drawFish.x, drawFish.y - drawFish.size * 0.4, drawFish.size * 0.65, isElectricZapping ? "rgba(110,251,255,0.45)" : "rgba(110,251,255,0.12)");
     } else if (behavior === "angry" && fish.flash > 0) {
       drawAura(drawFish.x, drawFish.y - drawFish.size * 0.42, drawFish.size * 0.76, "rgba(255,92,62,0.3)");
     } else if (behavior === "puffer" && fish.inflate > 0.2) {
@@ -262,9 +263,9 @@ export function createRenderer(canvas, images, config) {
       drawFallbackFish(ctx, drawFish, alpha);
     }
 
-    if (behavior === "electric") {
-      ctx.strokeStyle = "rgba(183,255,255,0.84)";
-      ctx.lineWidth = 1.7;
+    if (behavior === "electric" && isElectricZapping) {
+      ctx.strokeStyle = "rgba(183,255,255,0.95)";
+      ctx.lineWidth = 2.2;
       ctx.beginPath();
       const cy = drawFish.y - drawFish.size * 0.45;
       ctx.moveTo(drawFish.x - drawFish.size * 0.48, cy - 4);

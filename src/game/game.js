@@ -191,11 +191,12 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
         loadImage(getAsset("SCHOOL_FISH", "/generated-assets/assets/school_fish.png")).catch(() => null),
         loadImage(getAsset("SPECTRAL_PEARL", "/generated-assets/assets/spectral_pearl.png")).catch(() => null),
         loadImage(getAsset("TIMID_FISH", "/generated-assets/assets/timid_fish.png")).catch(() => null),
+        loadImage(getAsset("GHOST_FISH", "/generated-assets/assets/ghost_fish.png")).catch(() => null),
       ]).then(([
         background, angryFish, crab, electricFish, emberFish, fishFood,
         hookBait, lemonTang, miniShark, neonTetra, octopus, pearlKoi,
         pirateTreasure, pufferFish, rainbowFish, royalBeta, schoolFish,
-        spectralPearl, timidFish
+        spectralPearl, timidFish, ghostFish
       ]) => {
         renderer = createRenderer(
           elements.canvas,
@@ -203,7 +204,7 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
             background, angryFish, crab, electricFish, emberFish, fishFood,
             hookBait, lemonTang, miniShark, neonTetra, octopus, pearlKoi,
             pirateTreasure, pufferFish, rainbowFish, royalBeta, schoolFish,
-            spectralPearl, timidFish
+            spectralPearl, timidFish, ghostFish
           },
           config,
         );

@@ -82,14 +82,14 @@ export function createUI(shell) {
                 <p>0 pts · ⚠️ <strong>BAIT THIEF!</strong> Steals your hook's bait upon contact! You must reel all the way back up to re-bait.</p>
               </div>
             </div>
-            <div class="fish-card danger">
+            <div class="fish-card warning">
               <img src="/generated-assets/assets/electric_fish.png" alt="Electric Fish" class="fish-icon" />
               <div class="fish-info">
                 <div class="fish-title-row">
                   <strong>Electric Fish</strong>
                   <span class="badge-tag tag-warning">140 PTS</span>
                 </div>
-                <p>⚡ Zaps and <strong>stuns your hook for 2 seconds</strong> upon touch, completely freezing your control!</p>
+                <p>⚡ <strong>Zaps &amp; stuns</strong> your hook when charged! Catch it during its <strong>calm recharge phase</strong> (sparks off) or while <strong>Ghost Lens</strong> is active!</p>
               </div>
             </div>
             <div class="fish-card special">
@@ -109,7 +109,7 @@ export function createUI(shell) {
                   <strong>Puffer Fish</strong>
                   <span class="badge-tag tag-points">150 PTS</span>
                 </div>
-                <p>🐡 Inflates when your hook gets near, bouncing your line away!</p>
+                <p>🐡 <strong>Inflates &amp; bounces</strong> your line when expanded! Catch it <strong>before it inflates</strong> (swift drop when calm) or while <strong>Ghost Lens</strong> is active!</p>
               </div>
             </div>
             <div class="fish-card warning">

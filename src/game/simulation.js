@@ -475,6 +475,11 @@ export function createSimulation(config, events) {
     specialEvent("power", "SPECTRAL PEARL", "Ghost fish are solid for 8s", null, "#e6d5ff");
   }
 
+  function isElectricZapping(fish) {
+    if (state.powerTime > 0) return false;
+    return ((state.elapsed + fish.phase * 2) % 6.0) < 3.2;
+  }
+
   function handleFishContact(fish) {
     const behavior = fish.species.behavior;
     if (behavior === "crab") {
@@ -489,24 +494,26 @@ export function createSimulation(config, events) {
     if (behavior === "ghost" && state.powerTime <= 0) {
       if (fish.actionCooldown <= 0) {
         fish.actionCooldown = 1.5;
-        specialEvent("phase", "PHASED THROUGH", "Find the spectral pearl", fish, "#dbc8ff");
+        specialEvent("phase", "PHASED THROUGH", "Get Ghost Lens to catch!", fish, "#dbc8ff");
       }
       return;
     }
-    if (behavior === "electric" && fish.actionCooldown <= 0) {
-      state.hook.stun = 2;
-      state.hook.wobble = 2;
-      fish.actionCooldown = 4;
-      addBurst(state.hook.x, state.hook.y, "#9efaff", 24);
-      specialEvent("zap", "ZAPPED!", "Hook stunned for 2s", fish, "#aefcff");
+    if (behavior === "electric" && isElectricZapping(fish)) {
+      if (fish.actionCooldown <= 0) {
+        state.hook.stun = 2;
+        state.hook.wobble = 2;
+        fish.actionCooldown = 2.5;
+        addBurst(state.hook.x, state.hook.y, "#9efaff", 24);
+        specialEvent("zap", "ZAPPED!", "Catch during recharge or Ghost Lens!", fish, "#aefcff");
+      }
       return;
     }
-    if (behavior === "puffer" && fish.inflate > 0.35) {
+    if (behavior === "puffer" && fish.inflate > 0.35 && state.powerTime <= 0) {
       state.hook.x += state.hook.x < fish.x ? -42 : 42;
       state.hook.x = Math.max(24, Math.min(state.width - 24, state.hook.x));
       state.hook.mode = "up";
       fish.actionCooldown = 1.5;
-      specialEvent("block", "PUFFER BLOCK!", "It bounced the hook away", fish, "#ffe29a");
+      specialEvent("block", "PUFFER BLOCK!", "Catch before it inflates or use Ghost Lens", fish, "#ffe29a");
       return;
     }
     if (behavior === "angry" && fish.actionCooldown <= 0) {
