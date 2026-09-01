@@ -4,7 +4,7 @@ import { createInput } from "./input.js";
 import { createRenderer } from "./renderer.js";
 import { createSimulation } from "./simulation.js";
 import { createUI } from "./ui.js";
-import { recordScore, getPlayerName, setPlayerName } from "./leaderboard.js";
+import { recordScore, getPlayerName, setPlayerName, fetchGlobalLeaderboard } from "./leaderboard.js";
 
 function loadImage(url) {
   return new Promise((resolve, reject) => {
@@ -76,7 +76,7 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
           if (sdk.device.haptics.isSupported()) void sdk.device.haptics.vibrate([18, 32, 18]).catch(() => {});
         },
         onEnd: (score) => {
-          const lbData = recordScore(score);
+          const lbData = recordScore(score, (updatedLbData) => ui.showResults(updatedLbData));
           bestScore = Math.max(bestScore, lbData.userBest);
           posthog?.capture("game_round_completed", {
             score,
@@ -189,7 +189,7 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
             setPlayerName(next.trim());
             ui.setStartNameInput(next.trim());
             const currentScore = simulation?.state.score || 0;
-            const lbData = recordScore(currentScore);
+            const lbData = recordScore(currentScore, (updatedLbData) => ui.showResults(updatedLbData));
             ui.showResults(lbData);
           }
         });
@@ -248,6 +248,7 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
         ready = true;
         ui.setStartNameInput(getPlayerName());
         ui.setReady();
+        void fetchGlobalLeaderboard().catch(() => {});
       }).catch((err) => {
         console.error("Asset loading error:", err);
         ui.setError();

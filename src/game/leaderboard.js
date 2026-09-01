@@ -1,5 +1,7 @@
 const STORAGE_KEY = "tank_tackle_leaderboard_v3";
 const NAME_KEY = "tank_tackle_player_name";
+const CLOUD_API_URL = "https://api.restful-api.dev/objects/ff808181a058d43f01a05d6101891019";
+const CLOUD_BIN_NAME = "tank_and_tackle_global_leaderboard_v1";
 
 const DUMMY_NAMES = new Set([
   "SpectralKing",
@@ -60,19 +62,151 @@ export function saveLeaderboard(entries) {
   }
 }
 
-export function recordScore(score) {
+export function mergeEntries(localList = [], cloudList = []) {
+  const currentPlayer = getPlayerName() || "Angler 1";
+  const map = new Map();
+
+  const processEntry = (e) => {
+    if (!e || !e.name || DUMMY_NAMES.has(e.name)) return;
+    const cleanName = e.name.trim().slice(0, 16);
+    if (!cleanName) return;
+    const key = cleanName.toLowerCase();
+    const existing = map.get(key);
+    const scoreVal = Number(e.score) || 0;
+    if (!existing || scoreVal > existing.score) {
+      map.set(key, {
+        name: cleanName,
+        score: scoreVal,
+        avatar: e.avatar || "🎣",
+      });
+    }
+  };
+
+  localList.forEach(processEntry);
+  cloudList.forEach(processEntry);
+
+  const merged = Array.from(map.values());
+  merged.sort((a, b) => b.score - a.score);
+
+  return merged.map((entry, idx) => {
+    const isUser = entry.name.toLowerCase() === currentPlayer.toLowerCase();
+    return {
+      ...entry,
+      rank: idx + 1,
+      isUser,
+    };
+  });
+}
+
+export function formatLeaderboardState(entries, currentScore = 0) {
+  const playerName = getPlayerName() || "Angler 1";
+  const userEntry = entries.find((e) => e.isUser || e.name.toLowerCase() === playerName.toLowerCase());
+  const userRank = userEntry ? userEntry.rank : entries.length || 1;
+  const allTimeHighScore = entries[0] ? entries[0].score : currentScore;
+  const allTimeLeader = entries[0] ? entries[0].name : playerName;
+  const userBest = userEntry ? userEntry.score : currentScore;
+
+  return {
+    currentScore,
+    allTimeHighScore,
+    allTimeLeader,
+    userRank,
+    totalPlayers: entries.length,
+    userBest,
+    isNewRecord: currentScore >= allTimeHighScore && currentScore > 0,
+    entries,
+  };
+}
+
+export async function fetchGlobalLeaderboard(currentScore = 0) {
+  try {
+    const response = await fetch(CLOUD_API_URL, { cache: "no-store" });
+    if (response.ok) {
+      const data = await response.json();
+      const cloudEntries = Array.isArray(data?.data?.entries) ? data.data.entries : [];
+      const localEntries = loadLeaderboard();
+      const merged = mergeEntries(localEntries, cloudEntries);
+      saveLeaderboard(merged);
+      return formatLeaderboardState(merged, currentScore);
+    }
+  } catch (err) {
+    console.warn("Could not fetch global leaderboard from cloud:", err);
+  }
+  const localEntries = loadLeaderboard();
+  return formatLeaderboardState(mergeEntries(localEntries, []), currentScore);
+}
+
+export async function syncScoreToCloud(score, onUpdate) {
+  const playerName = getPlayerName() || "Angler 1";
+  const localEntries = loadLeaderboard();
+
+  let userIndex = localEntries.findIndex((e) => e.name.toLowerCase() === playerName.toLowerCase());
+  if (userIndex >= 0) {
+    if (score > localEntries[userIndex].score) {
+      localEntries[userIndex].score = score;
+    }
+  } else {
+    localEntries.push({ name: playerName, score, avatar: "🎣" });
+  }
+
+  try {
+    const getRes = await fetch(CLOUD_API_URL, { cache: "no-store" });
+    let cloudEntries = [];
+    if (getRes.ok) {
+      const data = await getRes.json();
+      if (Array.isArray(data?.data?.entries)) {
+        cloudEntries = data.data.entries;
+      }
+    }
+
+    const merged = mergeEntries(localEntries, cloudEntries);
+    saveLeaderboard(merged);
+
+    const cleanCloudPayload = merged.map((e) => ({
+      name: e.name,
+      score: e.score,
+      avatar: e.avatar || "🎣",
+    }));
+
+    const putRes = await fetch(CLOUD_API_URL, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: CLOUD_BIN_NAME,
+        data: { entries: cleanCloudPayload },
+      }),
+    });
+
+    if (putRes.ok) {
+      const state = formatLeaderboardState(merged, score);
+      if (typeof onUpdate === "function") {
+        onUpdate(state);
+      }
+      return state;
+    }
+  } catch (err) {
+    console.warn("Could not sync score to cloud backend:", err);
+  }
+
+  const merged = mergeEntries(localEntries, []);
+  saveLeaderboard(merged);
+  const state = formatLeaderboardState(merged, score);
+  if (typeof onUpdate === "function") {
+    onUpdate(state);
+  }
+  return state;
+}
+
+export function recordScore(score, onCloudSync) {
   const playerName = getPlayerName() || "Angler 1";
   const entries = loadLeaderboard();
-  
-  // Find existing entry for this user or create a new one
-  let userIndex = entries.findIndex((e) => e.isUser || e.name === playerName);
-  
+
+  let userIndex = entries.findIndex((e) => e.name.toLowerCase() === playerName.toLowerCase());
   if (userIndex >= 0) {
-    const existing = entries[userIndex];
-    existing.isUser = true;
-    existing.name = playerName;
-    if (score > existing.score) {
-      existing.score = score;
+    entries[userIndex].isUser = true;
+    entries[userIndex].name = playerName;
+    if (score > entries[userIndex].score) {
+      entries[userIndex].score = score;
     }
   } else {
     entries.push({
@@ -83,30 +217,11 @@ export function recordScore(score) {
     });
   }
 
-  // Sort descending by score
-  entries.sort((a, b) => b.score - a.score);
+  const merged = mergeEntries(entries, []);
+  saveLeaderboard(merged);
+  const initialState = formatLeaderboardState(merged, score);
 
-  // Assign ranks
-  entries.forEach((e, idx) => {
-    e.rank = idx + 1;
-  });
+  void syncScoreToCloud(score, onCloudSync).catch(() => {});
 
-  saveLeaderboard(entries);
-
-  // Recalculate rank for current score in this specific round
-  const userEntry = entries.find((e) => e.isUser || e.name === playerName);
-  const userRank = userEntry ? userEntry.rank : entries.length;
-  const allTimeHighScore = entries[0] ? entries[0].score : score;
-  const allTimeLeader = entries[0] ? entries[0].name : playerName;
-
-  return {
-    currentScore: score,
-    allTimeHighScore,
-    allTimeLeader,
-    userRank,
-    totalPlayers: entries.length,
-    userBest: userEntry ? userEntry.score : score,
-    isNewRecord: score >= allTimeHighScore && score > 0,
-    entries,
-  };
+  return initialState;
 }
