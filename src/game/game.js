@@ -4,7 +4,7 @@ import { createInput } from "./input.js";
 import { createRenderer } from "./renderer.js";
 import { createSimulation } from "./simulation.js";
 import { createUI } from "./ui.js";
-import { recordScore, getPlayerName, setPlayerName, fetchGlobalLeaderboard } from "./leaderboard.js";
+import { recordScore, getPlayerName, setPlayerName, fetchGlobalLeaderboard, isNameTaken, getCachedCloudEntries } from "./leaderboard.js";
 
 function loadImage(url) {
   return new Promise((resolve, reject) => {
@@ -17,7 +17,7 @@ function loadImage(url) {
 }
 
 export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
-  let cleanup = () => {};
+  let cleanup = () => { };
 
   return {
     start() {
@@ -45,12 +45,14 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
       };
       const sound = createAudioController(audio, config.musicVolume);
 
+      let lastValidationToken = null;
+
       const events = {
         onCast: () => sound.cast(),
         onReel: () => sound.reel(),
         onBite: () => {
           sound.catch(1);
-          if (sdk.device.haptics.isSupported()) void sdk.device.haptics.vibrate(25).catch(() => {});
+          if (sdk.device.haptics.isSupported()) void sdk.device.haptics.vibrate(25).catch(() => { });
         },
         onCatch: (species, combo, pointsEarned, score) => {
           sound.catch(combo);
@@ -69,14 +71,15 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
           } else if (type === "treasure") {
             posthog?.capture("treasure_collected", { points_earned: 400 });
           }
-          if (sdk.device.haptics.isSupported()) void sdk.device.haptics.vibrate(type === "zap" ? [25, 35, 25] : 20).catch(() => {});
+          if (sdk.device.haptics.isSupported()) void sdk.device.haptics.vibrate(type === "zap" ? [25, 35, 25] : 20).catch(() => { });
         },
         onEvent: (type) => {
           sound.event(type);
-          if (sdk.device.haptics.isSupported()) void sdk.device.haptics.vibrate([18, 32, 18]).catch(() => {});
+          if (sdk.device.haptics.isSupported()) void sdk.device.haptics.vibrate([18, 32, 18]).catch(() => { });
         },
-        onEnd: (score) => {
-          const lbData = recordScore(score, (updatedLbData) => ui.showResults(updatedLbData));
+        onEnd: (score, validationToken) => {
+          lastValidationToken = validationToken;
+          const lbData = recordScore(score, validationToken, (updatedLbData) => ui.showResults(updatedLbData));
           bestScore = Math.max(bestScore, lbData.userBest);
           posthog?.capture("game_round_completed", {
             score,
@@ -85,12 +88,12 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
             user_rank: lbData.userRank,
           });
           ui.showResults(lbData);
-          void sdk.gameState.save({ version: 1, bestScore }).catch(() => {});
-          void sdk.leaderboard.submit(Math.max(0, Math.min(score, Number.MAX_SAFE_INTEGER))).catch(() => {});
+          void sdk.gameState.save({ version: 1, bestScore }).catch(() => { });
+          void sdk.leaderboard.submit(Math.max(0, Math.min(score, Number.MAX_SAFE_INTEGER))).catch(() => { });
         },
       };
 
-      let input = { state: { pointerX: 0.5, left: false, right: false }, destroy() {} };
+      let input = { state: { pointerX: 0.5, left: false, right: false }, destroy() { } };
 
       function resize() {
         if (!renderer || !simulation || shell.hidden) return;
@@ -129,11 +132,13 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
       function activate() {
         if (!ready || started) return;
         const enteredName = ui.getStartNameInput();
-        if (enteredName) {
-          setPlayerName(enteredName);
-        } else if (!getPlayerName()) {
-          setPlayerName("Angler 1");
+        const targetName = enteredName || getPlayerName() || "Angler 1";
+        if (isNameTaken(targetName, getCachedCloudEntries())) {
+          ui.setNameTakenError(`⚠️ Name "${targetName}" is taken by another player! Choose a unique name.`);
+          return;
         }
+        setPlayerName(targetName);
+        ui.clearNameTakenError();
         started = true;
         ui.hideStart();
         ui.closeGuide();
@@ -164,6 +169,14 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
         });
       }
       if (elements.startNameInput) {
+        elements.startNameInput.addEventListener("input", () => {
+          const val = ui.getStartNameInput();
+          if (val && isNameTaken(val, getCachedCloudEntries())) {
+            ui.setNameTakenError(`⚠️ Name "${val}" is taken by another player!`);
+          } else {
+            ui.clearNameTakenError();
+          }
+        });
         elements.startNameInput.addEventListener("keydown", (e) => {
           if (e.key === "Enter") {
             e.preventDefault();
@@ -186,11 +199,17 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
           const current = getPlayerName() || "Angler 1";
           const next = window.prompt("Enter your player name for the global leaderboard:", current);
           if (next !== null && next.trim()) {
-            setPlayerName(next.trim());
-            ui.setStartNameInput(next.trim());
-            const currentScore = simulation?.state.score || 0;
-            const lbData = recordScore(currentScore, (updatedLbData) => ui.showResults(updatedLbData));
-            ui.showResults(lbData);
+            const clean = next.trim();
+            if (isNameTaken(clean, getCachedCloudEntries())) {
+              window.alert(`⚠️ The name "${clean}" is already claimed by another player!\n\nPlease choose a different unique username.`);
+              return;
+            }
+            setPlayerName(clean);
+            ui.setStartNameInput(clean);
+            if (lastValidationToken) {
+              const lbData = recordScore(lastValidationToken.score, lastValidationToken, (updatedLbData) => ui.showResults(updatedLbData));
+              ui.showResults(lbData);
+            }
           }
         });
       }
@@ -248,7 +267,7 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
         ready = true;
         ui.setStartNameInput(getPlayerName());
         ui.setReady();
-        void fetchGlobalLeaderboard().catch(() => {});
+        void fetchGlobalLeaderboard().catch(() => { });
       }).catch((err) => {
         console.error("Asset loading error:", err);
         ui.setError();
@@ -279,7 +298,7 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
     },
     destroy() {
       cleanup();
-      cleanup = () => {};
+      cleanup = () => { };
     },
   };
 }

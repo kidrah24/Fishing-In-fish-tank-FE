@@ -1,4 +1,5 @@
 import { rainbowValue, SPECIES } from "./species.js";
+import { createRoundToken } from "./leaderboard.js";
 
 const random = (min, max) => min + Math.random() * (max - min);
 const distance = (ax, ay, bx, by) => Math.hypot(ax - bx, ay - by);
@@ -9,6 +10,10 @@ const MAX_PARTICLES = 220;
 const MAX_MESSAGES = 6;
 
 export function createSimulation(config, events) {
+  let catchesCount = 0;
+  let verifiedScore = 0;
+  let roundNonce = Math.random().toString(36).substring(2);
+
   const state = {
     width: 1,
     height: 1,
@@ -106,6 +111,9 @@ export function createSimulation(config, events) {
   }
 
   function reset() {
+    catchesCount = 0;
+    verifiedScore = 0;
+    roundNonce = Math.random().toString(36).substring(2);
     state.running = true;
     state.elapsed = 0;
     state.timeLeft = config.roundDuration;
@@ -292,6 +300,8 @@ export function createSimulation(config, events) {
     state.lastCatchAt = state.elapsed;
     const gained = currentFishPoints(fish) * state.combo;
     state.score += gained;
+    catchesCount += 1;
+    verifiedScore += gained;
     showMessage(`${fish.species.label}  +${gained}`, state.combo > 1 ? `x${state.combo} combo` : "Nice catch!", state.hook.x, surfaceY() + 70);
     addBurst(state.hook.x, surfaceY() + 28, fish.species.behavior === "ghost" ? "#d9bcff" : "#fff2a8", 26);
     fish.respawn = 0.8;
@@ -574,6 +584,7 @@ export function createSimulation(config, events) {
       if (state.event.treasure?.visible && distance(state.hook.x, state.hook.y, state.event.treasure.x, state.event.treasure.y) < 52) {
         state.event.treasure.visible = false;
         state.score += 400;
+        verifiedScore += 400;
         state.hook.castHadFish = true;
         state.hook.mode = "up";
         addBurst(state.event.treasure.x, state.event.treasure.y, "#ffe176", 36);
@@ -641,7 +652,9 @@ export function createSimulation(config, events) {
         state.hook.caught.caught = false;
         state.hook.caught = null;
       }
-      events.onEnd?.(state.score);
+      state.score = verifiedScore;
+      const validationToken = createRoundToken(verifiedScore, catchesCount, roundNonce);
+      events.onEnd?.(verifiedScore, validationToken);
     }
   }
 

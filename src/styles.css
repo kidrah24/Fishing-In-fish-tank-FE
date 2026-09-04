@@ -381,6 +381,18 @@ button,
   background: rgba(3, 56, 78, 0.95);
 }
 
+.start-name-error {
+  margin: 6px 0 0;
+  color: #ff8585;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  background: rgba(80, 10, 10, 0.45);
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 120, 120, 0.4);
+}
+
 .start-buttons-row {
   display: flex;
   flex-wrap: wrap;
@@ -413,6 +425,14 @@ button,
 
 .start-play-btn:active {
   transform: translateY(1px);
+}
+
+.start-play-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  background: #a8a08a;
+  box-shadow: none;
 }
 
 .start-status-label {

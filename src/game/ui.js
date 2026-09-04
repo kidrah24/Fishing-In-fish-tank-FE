@@ -32,6 +32,7 @@ export function createUI(shell) {
               autocomplete="off"
             />
           </div>
+          <p data-name-taken-error class="start-name-error" hidden></p>
         </div>
 
         <div class="start-buttons-row">
@@ -293,6 +294,7 @@ export function createUI(shell) {
     start: shell.querySelector("[data-start]"),
     startLabel: shell.querySelector("[data-start-label]"),
     startNameInput: shell.querySelector("[data-start-name-input]"),
+    nameTakenError: shell.querySelector("[data-name-taken-error]"),
     startPlayBtn: shell.querySelector("[data-start-play]"),
     result: shell.querySelector("[data-result]"),
     resultScore: shell.querySelector("[data-result-score]"),
@@ -426,6 +428,20 @@ export function createUI(shell) {
     closeGuide,
     getStartNameInput() { return elements.startNameInput?.value.trim() || ""; },
     setStartNameInput(val) { if (elements.startNameInput) elements.startNameInput.value = val; },
+    setNameTakenError(msg) {
+      if (elements.nameTakenError) {
+        elements.nameTakenError.textContent = msg;
+        elements.nameTakenError.hidden = false;
+      }
+      if (elements.startPlayBtn) elements.startPlayBtn.disabled = true;
+    },
+    clearNameTakenError() {
+      if (elements.nameTakenError) {
+        elements.nameTakenError.hidden = true;
+        elements.nameTakenError.textContent = "";
+      }
+      if (elements.startPlayBtn) elements.startPlayBtn.disabled = false;
+    },
     setReady() { elements.startLabel.textContent = "Ready!"; elements.start.classList.add("is-ready"); },
     setError() { elements.startLabel.textContent = "Aquarium could not load"; },
     hideStart() { elements.start.hidden = true; },
