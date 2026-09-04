@@ -12,21 +12,27 @@ export function createUI(shell) {
     </div>
     <div class="badge power-status" data-status hidden></div>
     <div class="badge event-banner" data-event hidden></div>
+    <!-- Full Screen Fish Tank Loading Overlay -->
     <div class="tank-loader-overlay" data-tank-loader>
-      <div class="loader-card">
-        <div class="vessel-container">
-          <div class="vessel-glass">
-            <div class="vessel-water" data-water-fill style="height: 0%;">
-              <div class="vessel-wave"></div>
-              <div class="bubble b1"></div>
-              <div class="bubble b2"></div>
-              <div class="bubble b3"></div>
-            </div>
-            <span class="vessel-fish">🐠</span>
-          </div>
+      <div class="full-tank-water" data-water-fill style="height: 0%;">
+        <div class="full-tank-wave wave-front"></div>
+        <div class="full-tank-wave wave-back"></div>
+        <div class="tank-bubble b1"></div>
+        <div class="tank-bubble b2"></div>
+        <div class="tank-bubble b3"></div>
+        <div class="tank-bubble b4"></div>
+        <div class="tank-bubble b5"></div>
+        <div class="tank-bubble b6"></div>
+      </div>
+
+      <div class="full-loader-content">
+        <div class="loader-fish-badge">🐠</div>
+        <h1 class="full-loader-title">Tank &amp; Tackle</h1>
+        <p class="full-loader-sub">Filling aquarium with water…</p>
+        <div class="full-loader-progress-track">
+          <div class="full-loader-progress-fill" data-progress-fill style="width: 0%;"></div>
         </div>
-        <h2 class="loader-title">Tank &amp; Tackle</h2>
-        <p class="loader-status" data-loader-text>Filling fish tank with water… 0%</p>
+        <p class="full-loader-status" data-loader-text>0%</p>
       </div>
     </div>
 
@@ -331,6 +337,7 @@ export function createUI(shell) {
     startPlayBtn: shell.querySelector("[data-start-play]"),
     tankLoader: shell.querySelector("[data-tank-loader]"),
     waterFill: shell.querySelector("[data-water-fill]"),
+    progressFill: shell.querySelector("[data-progress-fill]"),
     loaderText: shell.querySelector("[data-loader-text]"),
     result: shell.querySelector("[data-result]"),
     resultScore: shell.querySelector("[data-result-score]"),
@@ -465,15 +472,17 @@ export function createUI(shell) {
     getStartNameInput() { return elements.startNameInput?.value.trim() || ""; },
     setStartNameInput(val) { if (elements.startNameInput) elements.startNameInput.value = val; },
     setLoadingProgress(pct) {
-      if (elements.waterFill) elements.waterFill.style.height = `${pct}%`;
-      if (elements.loaderText) elements.loaderText.textContent = `Filling fish tank with water… ${pct}%`;
+      const rounded = Math.min(100, Math.max(0, Math.round(pct)));
+      if (elements.waterFill) elements.waterFill.style.height = `${rounded}%`;
+      if (elements.progressFill) elements.progressFill.style.width = `${rounded}%`;
+      if (elements.loaderText) elements.loaderText.textContent = `${rounded}%`;
     },
     hideTankLoader() {
       if (elements.tankLoader) {
         elements.tankLoader.classList.add("is-loaded");
         setTimeout(() => {
           elements.tankLoader.hidden = true;
-        }, 500);
+        }, 650);
       }
     },
     updateNameView(hasSavedName, name) {

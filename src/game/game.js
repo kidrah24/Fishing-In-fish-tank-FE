@@ -255,10 +255,37 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
       let loadedAssetsCount = 0;
       const totalAssetsCount = assetUrls.length;
 
+      let currentDisplayPct = 0;
+      let targetDisplayPct = 0;
+      let assetLoadComplete = false;
+      let progressTimer = 0;
+
+      function updateLoaderLoop() {
+        if (assetLoadComplete) {
+          targetDisplayPct = 100;
+        } else {
+          const rawPct = (loadedAssetsCount / totalAssetsCount) * 85;
+          targetDisplayPct = Math.max(targetDisplayPct + 0.65, rawPct);
+        }
+
+        if (currentDisplayPct < targetDisplayPct) {
+          currentDisplayPct = Math.min(targetDisplayPct, currentDisplayPct + 1.2);
+          ui.setLoadingProgress(currentDisplayPct);
+        }
+
+        if (currentDisplayPct >= 100 && assetLoadComplete) {
+          ui.setLoadingProgress(100);
+          ui.hideTankLoader();
+          return;
+        }
+
+        progressTimer = requestAnimationFrame(updateLoaderLoop);
+      }
+
+      progressTimer = requestAnimationFrame(updateLoaderLoop);
+
       function onAssetProgress() {
         loadedAssetsCount += 1;
-        const pct = Math.min(100, Math.round((loadedAssetsCount / totalAssetsCount) * 100));
-        ui.setLoadingProgress(pct);
       }
 
       Promise.all(
@@ -279,6 +306,7 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
         pirateTreasure, pufferFish, rainbowFish, royalBeta, schoolFish,
         spectralPearl, timidFish, ghostFish
       ]) => {
+        assetLoadComplete = true;
         renderer = createRenderer(
           elements.canvas,
           {
@@ -299,7 +327,6 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
         ui.updateNameView(Boolean(savedName), savedName);
         ui.setStartNameInput(savedName);
         ui.setReady();
-        ui.hideTankLoader();
         void fetchGlobalLeaderboard().catch(() => { });
       }).catch((err) => {
         console.error("Asset loading error:", err);
@@ -317,6 +344,7 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
       raf = requestAnimationFrame(loop);
       cleanup = () => {
         cancelAnimationFrame(raf);
+        cancelAnimationFrame(progressTimer);
         resizeObserver?.disconnect();
         input.destroy();
         sound.destroy();
