@@ -12,56 +12,31 @@ export function createUI(shell) {
     </div>
     <div class="badge power-status" data-status hidden></div>
     <div class="badge event-banner" data-event hidden></div>
-    <!-- Vibrant Coral Reef & Fish Tank Loading Overlay -->
-    <div class="tank-loader-overlay theme-coral-reef" data-tank-loader>
-      <div class="coral-bg-layer"></div>
-      <div class="coral-caustics-layer"></div>
-
-      <!-- Full Screen Glowing Water Layer -->
+    <!-- Minimalist Sleek Glass Loading Overlay -->
+    <div class="tank-loader-overlay theme-sleek-glass" data-tank-loader>
+      <!-- Full Screen Rising Water Level -->
       <div class="full-tank-water" data-water-fill style="height: 0%;">
-        <div class="full-tank-wave wave-front"></div>
-        <div class="full-tank-wave wave-back"></div>
-        
-        <!-- Bioluminescent Floating Bubbles -->
-        <div class="coral-bubble cb1"></div>
-        <div class="coral-bubble cb2"></div>
-        <div class="coral-bubble cb3"></div>
-        <div class="coral-bubble cb4"></div>
-        <div class="coral-bubble cb5"></div>
-        <div class="coral-bubble cb6"></div>
-        <div class="coral-bubble cb7"></div>
+        <div class="sleek-neon-wave"></div>
+        <div class="glass-bubble gb1"></div>
+        <div class="glass-bubble gb2"></div>
+        <div class="glass-bubble gb3"></div>
+        <div class="glass-bubble gb4"></div>
+        <div class="glass-bubble gb5"></div>
       </div>
 
-      <!-- Animated Coral Reef Swimming Fish -->
-      <div class="coral-swimmer swimmer-koi">
-        <img src="/generated-assets/assets/pearl_koi.png" alt="Pearl Koi" />
-      </div>
-      <div class="coral-swimmer swimmer-tang">
-        <img src="/generated-assets/assets/lemon_tang.png" alt="Lemon Tang" />
-      </div>
-      <div class="coral-swimmer swimmer-beta">
-        <img src="/generated-assets/assets/royal_beta.png" alt="Royal Betta" />
-      </div>
-      <div class="coral-swimmer swimmer-tetra">
-        <img src="/generated-assets/assets/neon_tetra.png" alt="Neon Tetra" />
-      </div>
-      <div class="coral-swimmer swimmer-shark">
-        <img src="/generated-assets/assets/mini_shark.png" alt="Mini Shark" />
-      </div>
-
-      <!-- Center Coral Glass Card -->
-      <div class="coral-loader-card">
-        <div class="coral-badge-icon">🪸</div>
-        <h1 class="coral-loader-title">Tank &amp; Tackle</h1>
-        <p class="coral-loader-sub">Filling Aquarium &amp; Coral Reef…</p>
+      <!-- Centered Sleek Glassmorphism Card -->
+      <div class="sleek-glass-card">
+        <div class="sleek-badge-icon">🎣</div>
+        <h1 class="sleek-loader-title">Tank &amp; Tackle</h1>
+        <p class="sleek-loader-sub">Preparing Aquarium…</p>
         
-        <div class="coral-progress-wrapper">
-          <div class="coral-progress-track">
-            <div class="coral-progress-fill" data-progress-fill style="width: 0%;">
-              <div class="coral-progress-glow"></div>
+        <div class="sleek-progress-wrapper">
+          <div class="sleek-progress-track">
+            <div class="sleek-progress-fill" data-progress-fill style="width: 0%;">
+              <div class="sleek-shine-pulse"></div>
             </div>
           </div>
-          <span class="coral-progress-text" data-loader-text>0%</span>
+          <span class="sleek-progress-text" data-loader-text>0%</span>
         </div>
       </div>
     </div>

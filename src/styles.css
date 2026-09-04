@@ -435,8 +435,8 @@ button,
   box-shadow: none;
 }
 
-/* Vibrant Coral Reef & Fish Tank Loading Screen Theme */
-.tank-loader-overlay.theme-coral-reef {
+/* Minimalist Sleek Glass Loading Overlay Theme */
+.tank-loader-overlay.theme-sleek-glass {
   position: absolute;
   inset: 0;
   z-index: 1000;
@@ -444,251 +444,154 @@ button,
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #031521;
+  background: radial-gradient(circle at 50% 30%, #082638 0%, #03131e 65%, #010a11 100%);
   overflow: hidden;
   transition: opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.65s ease;
 }
 
-.coral-bg-layer {
-  position: absolute;
-  inset: 0;
-  background: url('/generated-assets/aquarium_bg.webp') center center / cover no-repeat;
-  filter: brightness(0.68) saturate(1.45) contrast(1.1);
-  z-index: 1;
-}
-
-.coral-caustics-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
+.tank-loader-overlay.is-loaded {
+  opacity: 0;
   pointer-events: none;
-  background: radial-gradient(ellipse at 50% 0%, rgba(100, 240, 255, 0.4) 0%, rgba(0, 160, 220, 0.15) 45%, transparent 80%),
-              linear-gradient(180deg, rgba(255, 230, 150, 0.15) 0%, transparent 60%);
-  animation: caustics-pulse 3.5s infinite ease-in-out alternate;
 }
 
-@keyframes caustics-pulse {
-  0% { opacity: 0.7; transform: scale(1.0); }
-  100% { opacity: 1.0; transform: scale(1.03); }
-}
-
+/* Full Screen Rising Water Level Layer */
 .full-tank-water {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 3;
-  background: linear-gradient(180deg, rgba(0, 215, 255, 0.88) 0%, rgba(3, 85, 125, 0.94) 50%, rgba(1, 30, 50, 0.98) 100%);
-  box-shadow: 0 -16px 50px rgba(0, 229, 255, 0.7);
+  background: linear-gradient(180deg, rgba(0, 229, 255, 0.88) 0%, rgba(2, 60, 95, 0.95) 50%, rgba(1, 20, 35, 0.99) 100%);
+  box-shadow: 0 -12px 40px rgba(0, 229, 255, 0.7);
   transition: height 0.15s ease-out;
   overflow: hidden;
 }
 
-.full-tank-wave {
+.sleek-neon-wave {
   position: absolute;
-  top: -16px;
+  top: -14px;
   left: 0;
   width: 200%;
-  height: 28px;
-  background: radial-gradient(circle at 50% 100%, transparent 8px, rgba(80, 240, 255, 0.95) 9px);
-  background-size: 28px 18px;
-}
-
-.full-tank-wave.wave-front {
-  animation: wave-slide 1.2s infinite linear;
-  opacity: 0.95;
-  z-index: 3;
-}
-
-.full-tank-wave.wave-back {
-  top: -22px;
-  animation: wave-slide-reverse 1.8s infinite linear;
-  opacity: 0.55;
-  z-index: 2;
-  filter: brightness(1.3);
+  height: 24px;
+  background: radial-gradient(circle at 50% 100%, transparent 7px, rgba(0, 229, 255, 0.95) 8px);
+  background-size: 24px 16px;
+  animation: wave-slide 1.3s infinite linear;
 }
 
 @keyframes wave-slide {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-56px); }
+  100% { transform: translateX(-48px); }
 }
 
-@keyframes wave-slide-reverse {
-  0% { transform: translateX(-56px); }
-  100% { transform: translateX(0); }
-}
-
-/* Bioluminescent Floating Bubbles */
-.coral-bubble {
+/* Minimalist Glowing Glass Bubbles */
+.glass-bubble {
   position: absolute;
   bottom: -20px;
   border-radius: 50%;
-  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.9), 0 0 12px rgba(0, 229, 255, 0.6);
-  animation: bubble-rise-coral 3.4s infinite cubic-bezier(0.4, 0, 0.6, 1);
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.95) 0%, rgba(0, 229, 255, 0.2) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
+  animation: bubble-rise-glass 3.2s infinite cubic-bezier(0.4, 0, 0.6, 1);
 }
 
-.coral-bubble.cb1 { width: 18px; height: 18px; left: 10%; background: rgba(0, 229, 255, 0.4); animation-duration: 2.8s; animation-delay: 0s; }
-.coral-bubble.cb2 { width: 26px; height: 26px; left: 28%; background: rgba(255, 229, 127, 0.4); animation-duration: 3.6s; animation-delay: 0.5s; }
-.coral-bubble.cb3 { width: 14px; height: 14px; left: 48%; background: rgba(0, 229, 255, 0.5); animation-duration: 2.6s; animation-delay: 0.9s; }
-.coral-bubble.cb4 { width: 22px; height: 22px; left: 66%; background: rgba(255, 168, 232, 0.4); animation-duration: 3.2s; animation-delay: 0.2s; }
-.coral-bubble.cb5 { width: 16px; height: 16px; left: 82%; background: rgba(0, 229, 255, 0.4); animation-duration: 3.0s; animation-delay: 0.7s; }
-.coral-bubble.cb6 { width: 30px; height: 30px; left: 38%; background: rgba(140, 235, 216, 0.4); animation-duration: 4.0s; animation-delay: 1.2s; }
-.coral-bubble.cb7 { width: 20px; height: 20px; left: 92%; background: rgba(255, 229, 127, 0.45); animation-duration: 3.3s; animation-delay: 0.3s; }
+.glass-bubble.gb1 { width: 14px; height: 14px; left: 15%; animation-duration: 2.8s; animation-delay: 0s; }
+.glass-bubble.gb2 { width: 22px; height: 22px; left: 35%; animation-duration: 3.5s; animation-delay: 0.4s; }
+.glass-bubble.gb3 { width: 10px; height: 10px; left: 55%; animation-duration: 2.5s; animation-delay: 0.8s; }
+.glass-bubble.gb4 { width: 18px; height: 18px; left: 75%; animation-duration: 3.1s; animation-delay: 0.2s; }
+.glass-bubble.gb5 { width: 26px; height: 26px; left: 88%; animation-duration: 3.8s; animation-delay: 0.6s; }
 
-@keyframes bubble-rise-coral {
+@keyframes bubble-rise-glass {
   0% { transform: translateY(0) scale(0.6); opacity: 0.9; }
-  100% { transform: translateY(-105vh) scale(1.4); opacity: 0; }
+  100% { transform: translateY(-105vh) scale(1.3); opacity: 0; }
 }
 
-/* Animated Coral Reef Swimming Fish */
-.coral-swimmer {
-  position: absolute;
-  z-index: 6;
-  pointer-events: none;
-  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.5));
-}
-
-.coral-swimmer img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.coral-swimmer.swimmer-koi {
-  top: 22%;
-  left: -120px;
-  width: clamp(75px, 14cqw, 110px);
-  animation: swim-right 8s infinite linear;
-}
-
-.coral-swimmer.swimmer-tang {
-  top: 62%;
-  right: -100px;
-  width: clamp(60px, 12cqw, 90px);
-  animation: swim-left 6.5s infinite linear 1s;
-}
-
-.coral-swimmer.swimmer-beta {
-  bottom: 22%;
-  left: -100px;
-  width: clamp(70px, 13cqw, 100px);
-  animation: swim-right 7.2s infinite linear 3.5s;
-}
-
-.coral-swimmer.swimmer-tetra {
-  top: 42%;
-  right: -80px;
-  width: clamp(50px, 10cqw, 75px);
-  animation: swim-left 5.5s infinite linear 2s;
-}
-
-.coral-swimmer.swimmer-shark {
-  top: 14%;
-  right: -160px;
-  width: clamp(90px, 18cqw, 130px);
-  animation: swim-left 10s infinite linear 0.5s;
-  opacity: 0.85;
-}
-
-@keyframes swim-right {
-  0% { transform: translateX(0) translateY(0); }
-  50% { transform: translateX(50vw) translateY(-14px); }
-  100% { transform: translateX(115vw) translateY(0); }
-}
-
-@keyframes swim-left {
-  0% { transform: translateX(0) scaleX(-1) translateY(0); }
-  50% { transform: translateX(-50vw) scaleX(-1) translateY(12px); }
-  100% { transform: translateX(-115vw) scaleX(-1) translateY(0); }
-}
-
-/* Center Coral Glass Card */
-.coral-loader-card {
+/* Centered Sleek Glassmorphism Card */
+.sleek-glass-card {
   position: relative;
   z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 36px 44px;
-  border-radius: 28px;
-  background: rgba(3, 30, 48, 0.78);
-  border: 1.5px solid rgba(0, 229, 255, 0.45);
-  backdrop-filter: blur(16px);
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 229, 255, 0.2);
+  padding: 40px 48px;
+  border-radius: 32px;
+  background: rgba(4, 28, 44, 0.68);
+  border: 1px solid rgba(0, 229, 255, 0.38);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), inset 0 0 30px rgba(0, 229, 255, 0.12);
   text-align: center;
   max-width: 420px;
   width: 90%;
 }
 
-.coral-badge-icon {
-  font-size: 48px;
-  margin-bottom: 8px;
-  filter: drop-shadow(0 4px 12px rgba(0, 229, 255, 0.7));
-  animation: coral-float 2.2s infinite ease-in-out alternate;
+.sleek-badge-icon {
+  font-size: 52px;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 0 16px rgba(0, 229, 255, 0.8));
+  animation: sleek-pulse 2.0s infinite ease-in-out alternate;
 }
 
-@keyframes coral-float {
-  0% { transform: translateY(0) scale(1); }
-  100% { transform: translateY(-8px) scale(1.06); }
+@keyframes sleek-pulse {
+  0% { transform: scale(1) translateY(0); filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.6)); }
+  100% { transform: scale(1.08) translateY(-6px); filter: drop-shadow(0 0 24px rgba(0, 229, 255, 1)); }
 }
 
-.coral-loader-title {
+.sleek-loader-title {
   margin: 0 0 4px;
   font-family: "Baloo 2", sans-serif;
-  font-size: clamp(28px, 6cqw, 38px);
+  font-size: clamp(30px, 6.5cqw, 40px);
   font-weight: 900;
-  background: linear-gradient(180deg, #ffffff 0%, #ffe57f 50%, #ffaa00 100%);
+  background: linear-gradient(180deg, #ffffff 0%, #00e5ff 60%, #ffd661 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.6));
-  letter-spacing: 0.02em;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.6));
+  letter-spacing: 0.03em;
 }
 
-.coral-loader-sub {
-  margin: 0 0 20px;
+.sleek-loader-sub {
+  margin: 0 0 22px;
   font-size: 14px;
   font-weight: 700;
-  color: #76efff;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  color: #8cebd8;
+  letter-spacing: 0.04em;
 }
 
-.coral-progress-wrapper {
+.sleek-progress-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   width: 100%;
 }
 
-.coral-progress-track {
+.sleek-progress-track {
   width: 100%;
   max-width: 320px;
-  height: 16px;
+  height: 14px;
   border-radius: 999px;
-  background: rgba(1, 20, 32, 0.85);
-  border: 1.5px solid rgba(0, 229, 255, 0.5);
+  background: rgba(1, 18, 28, 0.8);
+  border: 1px solid rgba(0, 229, 255, 0.4);
   overflow: hidden;
   box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.7), 0 0 16px rgba(0, 229, 255, 0.3);
   position: relative;
 }
 
-.coral-progress-fill {
+.sleek-progress-fill {
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, #00e5ff 0%, #34d399 50%, #ffe57f 100%);
-  box-shadow: 0 0 16px rgba(0, 229, 255, 0.9);
+  background: linear-gradient(90deg, #0099ff 0%, #00e5ff 60%, #ffd661 100%);
+  box-shadow: 0 0 16px rgba(0, 229, 255, 0.85);
   transition: width 0.15s ease-out;
   position: relative;
 }
 
-.coral-progress-glow {
+.sleek-shine-pulse {
   position: absolute;
   inset: 0;
   background: repeating-linear-gradient(
     -45deg,
-    rgba(255, 255, 255, 0.3) 0px,
-    rgba(255, 255, 255, 0.3) 12px,
+    rgba(255, 255, 255, 0.35) 0px,
+    rgba(255, 255, 255, 0.35) 12px,
     transparent 12px,
     transparent 24px
   );
@@ -700,11 +603,12 @@ button,
   100% { background-position-x: 28px; }
 }
 
-.coral-progress-text {
+.sleek-progress-text {
   font-family: "Baloo 2", sans-serif;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 900;
   color: #ffe57f;
+  font-variant-numeric: tabular-nums;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
 }
 
