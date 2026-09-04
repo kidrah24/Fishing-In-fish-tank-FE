@@ -12,8 +12,32 @@ export function createUI(shell) {
     </div>
     <div class="badge power-status" data-status hidden></div>
     <div class="badge event-banner" data-event hidden></div>
-    <!-- Minimalist Sleek Glass Loading Overlay -->
+    <!-- Deep Sea Aquarium Loading Screen Overlay -->
     <div class="tank-loader-overlay theme-sleek-glass" data-tank-loader>
+      <!-- Ocean Sunbeams & Caustics effect layer -->
+      <div class="ocean-sunbeams"></div>
+
+      <!-- Sonar Depth Rings -->
+      <div class="sonar-rings">
+        <div class="sonar-ring r1"></div>
+        <div class="sonar-ring r2"></div>
+        <div class="sonar-ring r3"></div>
+      </div>
+
+      <!-- Animated Swimming Aquarium Fish Decor -->
+      <div class="loader-swimming-fish fish-shark">
+        <img src="/generated-assets/assets/mini_shark.png" alt="Shark" />
+      </div>
+      <div class="loader-swimming-fish fish-rainbow">
+        <img src="/generated-assets/assets/rainbow_fish.png" alt="Rainbow Fish" />
+      </div>
+      <div class="loader-swimming-fish fish-puffer">
+        <img src="/generated-assets/assets/puffer_fish.png" alt="Puffer Fish" />
+      </div>
+      <div class="loader-swimming-fish fish-tang">
+        <img src="/generated-assets/assets/lemon_tang.png" alt="Lemon Tang" />
+      </div>
+
       <!-- Full Screen Rising Water Level -->
       <div class="full-tank-water" data-water-fill style="height: 0%;">
         <div class="sleek-neon-wave"></div>
@@ -26,17 +50,26 @@ export function createUI(shell) {
 
       <!-- Centered Sleek Glassmorphism Card -->
       <div class="sleek-glass-card">
-        <div class="sleek-badge-icon">🎣</div>
+        <div class="loader-badge-header">
+          <div class="sleek-badge-icon">🎣</div>
+          <div class="sonar-status-pulse"></div>
+        </div>
         <h1 class="sleek-loader-title">Tank &amp; Tackle</h1>
-        <p class="sleek-loader-sub">Preparing Aquarium…</p>
-        
+        <p class="sleek-loader-sub" data-loader-depth>Depth: 0m · Preparing Aquarium…</p>
+
         <div class="sleek-progress-wrapper">
           <div class="sleek-progress-track">
             <div class="sleek-progress-fill" data-progress-fill style="width: 0%;">
               <div class="sleek-shine-pulse"></div>
+              <div class="progress-hook-indicator" data-loader-hook>🎣</div>
             </div>
           </div>
           <span class="sleek-progress-text" data-loader-text>0%</span>
+        </div>
+
+        <div class="loader-tip-card">
+          <span class="tip-icon">💡</span>
+          <p class="tip-text" data-loader-tip>Initialising fishing line &amp; aquarium…</p>
         </div>
       </div>
     </div>
@@ -344,6 +377,8 @@ export function createUI(shell) {
     waterFill: shell.querySelector("[data-water-fill]"),
     progressFill: shell.querySelector("[data-progress-fill]"),
     loaderText: shell.querySelector("[data-loader-text]"),
+    loaderDepth: shell.querySelector("[data-loader-depth]"),
+    loaderTip: shell.querySelector("[data-loader-tip]"),
     result: shell.querySelector("[data-result]"),
     resultScore: shell.querySelector("[data-result-score]"),
     alltimeScore: shell.querySelector("[data-alltime-score]"),
@@ -481,6 +516,24 @@ export function createUI(shell) {
       if (elements.waterFill) elements.waterFill.style.height = `${rounded}%`;
       if (elements.progressFill) elements.progressFill.style.width = `${rounded}%`;
       if (elements.loaderText) elements.loaderText.textContent = `${rounded}%`;
+      if (elements.loaderDepth) {
+        elements.loaderDepth.textContent = `Depth: ${Math.round(rounded * 1.5)}m · Preparing Aquarium…`;
+      }
+      if (elements.loaderTip) {
+        const tips = [
+          "Tip: Catch fish within 8s of each other to build up to a 9x score multiplier!",
+          "Tip: Pirate Treasure Chests grant a massive 400 bonus points!",
+          "Tip: Grab floating Spectral Pearls to activate 8s Ghost Lens vision!",
+          "Tip: Watch out for Bait Crabs — they steal your bait upon contact!",
+          "Tip: Electric Fish zap when sparking — catch them during their calm phase!",
+          "Tip: Sneak up behind Angry Fish so they don't bump your hook away!",
+          "Tip: Score as high as you can in 60s to climb the global leaderboard!"
+        ];
+        const tipIdx = Math.min(tips.length - 1, Math.floor((rounded / 100) * tips.length));
+        if (elements.loaderTip.textContent !== tips[tipIdx]) {
+          elements.loaderTip.textContent = tips[tipIdx];
+        }
+      }
     },
     hideTankLoader() {
       if (elements.tankLoader) {

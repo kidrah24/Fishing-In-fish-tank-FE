@@ -435,7 +435,7 @@ button,
   box-shadow: none;
 }
 
-/* Minimalist Sleek Glass Loading Overlay Theme */
+/* Immersive Deep Sea Aquarium Loading Overlay Theme */
 .tank-loader-overlay.theme-sleek-glass {
   position: absolute;
   inset: 0;
@@ -444,7 +444,7 @@ button,
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle at 50% 30%, #082638 0%, #03131e 65%, #010a11 100%);
+  background: radial-gradient(circle at 50% 20%, #0a334c 0%, #031a2b 55%, #010c14 100%);
   overflow: hidden;
   transition: opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.65s ease;
 }
@@ -452,6 +452,111 @@ button,
 .tank-loader-overlay.is-loaded {
   opacity: 0;
   pointer-events: none;
+}
+
+/* Ocean Sunbeams & Caustics Layer */
+.ocean-sunbeams {
+  position: absolute;
+  top: -20%;
+  left: -20%;
+  width: 140%;
+  height: 80%;
+  background: radial-gradient(ellipse at 50% 0%, rgba(0, 229, 255, 0.28) 0%, rgba(0, 150, 255, 0.12) 45%, transparent 75%);
+  filter: blur(12px);
+  pointer-events: none;
+  z-index: 2;
+  animation: sunbeam-pulse 4s infinite ease-in-out alternate;
+}
+
+@keyframes sunbeam-pulse {
+  0% { transform: scale(1) translateY(0); opacity: 0.75; }
+  100% { transform: scale(1.08) translateY(14px); opacity: 1; }
+}
+
+/* Sonar Depth Pulse Rings */
+.sonar-rings {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 550px;
+  height: 550px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.sonar-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0, 229, 255, 0.25);
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
+  animation: sonar-expand 4.5s infinite cubic-bezier(0.1, 0.8, 0.3, 1);
+}
+
+.sonar-ring.r1 { animation-delay: 0s; }
+.sonar-ring.r2 { animation-delay: 1.5s; }
+.sonar-ring.r3 { animation-delay: 3s; }
+
+@keyframes sonar-expand {
+  0% { transform: scale(0.1); opacity: 0.95; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+
+/* Animated Swimming Aquarium Fish Decor */
+.loader-swimming-fish {
+  position: absolute;
+  z-index: 4;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 12px rgba(0, 229, 255, 0.45));
+}
+
+.loader-swimming-fish img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.loader-swimming-fish.fish-shark {
+  top: 12%;
+  left: -180px;
+  width: 175px;
+  animation: swim-across-right 12s infinite linear;
+}
+
+.loader-swimming-fish.fish-rainbow {
+  top: 70%;
+  right: -140px;
+  width: 130px;
+  animation: swim-across-left 9s infinite linear 2s;
+}
+
+.loader-swimming-fish.fish-puffer {
+  top: 22%;
+  right: -130px;
+  width: 115px;
+  animation: swim-across-left 14s infinite linear 0.5s;
+}
+
+.loader-swimming-fish.fish-tang {
+  bottom: 14%;
+  left: -130px;
+  width: 120px;
+  animation: swim-across-right 10s infinite linear 4s;
+}
+
+@keyframes swim-across-right {
+  0% { transform: translateX(0) scaleX(1) translateY(0) rotate(2deg); }
+  50% { transform: translateX(calc(100vw + 260px)) scaleX(1) translateY(-20px) rotate(-3deg); }
+  50.01% { transform: translateX(calc(100vw + 260px)) scaleX(-1); }
+  100% { transform: translateX(0) scaleX(-1) translateY(10px); }
+}
+
+@keyframes swim-across-left {
+  0% { transform: translateX(0) scaleX(-1) translateY(0); }
+  50% { transform: translateX(calc(-100vw - 260px)) scaleX(-1) translateY(18px) rotate(-4deg); }
+  50.01% { transform: translateX(calc(-100vw - 260px)) scaleX(1); }
+  100% { transform: translateX(0) scaleX(1) translateY(-10px); }
 }
 
 /* Full Screen Rising Water Level Layer */
@@ -513,33 +618,57 @@ button,
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px 48px;
+  padding: 36px 44px;
   border-radius: 32px;
-  background: rgba(4, 28, 44, 0.68);
-  border: 1px solid rgba(0, 229, 255, 0.38);
-  backdrop-filter: blur(20px);
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), inset 0 0 30px rgba(0, 229, 255, 0.12);
+  background: rgba(3, 24, 38, 0.76);
+  border: 1.5px solid rgba(0, 229, 255, 0.45);
+  backdrop-filter: blur(24px);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), inset 0 0 35px rgba(0, 229, 255, 0.15);
   text-align: center;
-  max-width: 420px;
+  max-width: 440px;
   width: 90%;
+}
+
+.loader-badge-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.sonar-status-pulse {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 229, 255, 0.45) 0%, transparent 70%);
+  animation: pulse-ring 2s infinite ease-out;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 0.9; }
+  100% { transform: scale(1.6); opacity: 0; }
 }
 
 .sleek-badge-icon {
   font-size: 52px;
-  margin-bottom: 10px;
-  filter: drop-shadow(0 0 16px rgba(0, 229, 255, 0.8));
+  margin-bottom: 0;
+  filter: drop-shadow(0 0 18px rgba(0, 229, 255, 0.9));
   animation: sleek-pulse 2.0s infinite ease-in-out alternate;
+  position: relative;
+  z-index: 2;
 }
 
 @keyframes sleek-pulse {
   0% { transform: scale(1) translateY(0); filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.6)); }
-  100% { transform: scale(1.08) translateY(-6px); filter: drop-shadow(0 0 24px rgba(0, 229, 255, 1)); }
+  100% { transform: scale(1.08) translateY(-6px); filter: drop-shadow(0 0 26px rgba(0, 229, 255, 1)); }
 }
 
 .sleek-loader-title {
-  margin: 0 0 4px;
+  margin: 4px 0 2px;
   font-family: "Baloo 2", sans-serif;
-  font-size: clamp(30px, 6.5cqw, 40px);
+  font-size: clamp(32px, 7cqw, 42px);
   font-weight: 900;
   background: linear-gradient(180deg, #ffffff 0%, #00e5ff 60%, #ffd661 100%);
   -webkit-background-clip: text;
@@ -549,7 +678,7 @@ button,
 }
 
 .sleek-loader-sub {
-  margin: 0 0 22px;
+  margin: 0 0 20px;
   font-size: 14px;
   font-weight: 700;
   color: #8cebd8;
@@ -566,13 +695,13 @@ button,
 
 .sleek-progress-track {
   width: 100%;
-  max-width: 320px;
-  height: 14px;
+  max-width: 340px;
+  height: 16px;
   border-radius: 999px;
-  background: rgba(1, 18, 28, 0.8);
-  border: 1px solid rgba(0, 229, 255, 0.4);
+  background: rgba(1, 18, 28, 0.85);
+  border: 1px solid rgba(0, 229, 255, 0.45);
   overflow: hidden;
-  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.7), 0 0 16px rgba(0, 229, 255, 0.3);
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.8), 0 0 18px rgba(0, 229, 255, 0.35);
   position: relative;
 }
 
@@ -580,9 +709,18 @@ button,
   height: 100%;
   border-radius: 999px;
   background: linear-gradient(90deg, #0099ff 0%, #00e5ff 60%, #ffd661 100%);
-  box-shadow: 0 0 16px rgba(0, 229, 255, 0.85);
+  box-shadow: 0 0 18px rgba(0, 229, 255, 0.9);
   transition: width 0.15s ease-out;
   position: relative;
+}
+
+.progress-hook-indicator {
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  filter: drop-shadow(0 0 4px #00e5ff);
 }
 
 .sleek-shine-pulse {
@@ -610,6 +748,34 @@ button,
   color: #ffe57f;
   font-variant-numeric: tabular-nums;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+/* Dynamic Tips Card */
+.loader-tip-card {
+  margin-top: 18px;
+  padding: 10px 16px;
+  border-radius: 16px;
+  background: rgba(0, 229, 255, 0.08);
+  border: 1px solid rgba(0, 229, 255, 0.22);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  box-shadow: inset 0 0 12px rgba(0, 229, 255, 0.05);
+}
+
+.loader-tip-card .tip-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.loader-tip-card .tip-text {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #c2f5ec;
+  line-height: 1.35;
+  text-align: left;
 }
 
 /* Mobile Phone Responsive Adjustments for Tank Loader */
