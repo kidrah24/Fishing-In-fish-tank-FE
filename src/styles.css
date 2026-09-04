@@ -444,9 +444,26 @@ button,
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #02121b;
+  background: #04253a;
   overflow: hidden;
   transition: opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.65s ease;
+}
+
+.loader-bg-image {
+  position: absolute;
+  inset: 0;
+  background: url('/generated-assets/aquarium_bg.webp') center/cover no-repeat;
+  filter: brightness(0.65) saturate(1.2);
+  z-index: 1;
+}
+
+.loader-light-rays {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% -10%, rgba(160, 240, 255, 0.35) 0%, rgba(0, 150, 200, 0.1) 50%, transparent 80%),
+              linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, transparent 45%);
+  pointer-events: none;
+  z-index: 2;
 }
 
 .tank-loader-overlay.is-loaded {
@@ -460,10 +477,11 @@ button,
   bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(180deg, rgba(45, 195, 230, 0.94) 0%, rgba(2, 60, 90, 0.98) 60%, rgba(1, 25, 42, 0.99) 100%);
-  box-shadow: 0 -14px 45px rgba(56, 210, 245, 0.65);
+  background: linear-gradient(180deg, rgba(34, 180, 220, 0.88) 0%, rgba(2, 60, 95, 0.94) 50%, rgba(1, 20, 35, 0.98) 100%);
+  box-shadow: 0 -14px 45px rgba(56, 210, 245, 0.7);
   transition: height 0.15s ease-out;
   overflow: hidden;
+  z-index: 3;
 }
 
 .full-tank-wave {
@@ -523,7 +541,102 @@ button,
   100% { transform: translateY(-100vh) scale(1.3); opacity: 0; }
 }
 
-/* Loader Content Overlay in Center */
+/* Bubble Tube Column on Right Side */
+.bubble-column-right {
+  position: absolute;
+  right: 6%;
+  bottom: 0;
+  top: 0;
+  width: 30px;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.tube-bubble {
+  position: absolute;
+  bottom: -20px;
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.3) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  animation: tube-rise 2.2s infinite linear;
+}
+
+.tube-bubble.tb1 { width: 10px; height: 10px; left: 5px; animation-delay: 0s; }
+.tube-bubble.tb2 { width: 14px; height: 14px; left: 14px; animation-delay: 0.4s; }
+.tube-bubble.tb3 { width: 8px; height: 8px; left: 8px; animation-delay: 0.9s; }
+.tube-bubble.tb4 { width: 16px; height: 16px; left: 2px; animation-delay: 1.3s; }
+.tube-bubble.tb5 { width: 12px; height: 12px; left: 12px; animation-delay: 1.8s; }
+
+@keyframes tube-rise {
+  0% { transform: translateY(0) scale(0.6); opacity: 0.9; }
+  100% { transform: translateY(-105vh) scale(1.1); opacity: 0; }
+}
+
+/* Floating Fish Decor Elements */
+.loader-fish-decor {
+  position: absolute;
+  z-index: 8;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.55));
+}
+
+.loader-fish-decor img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.loader-fish-decor.f-shark {
+  top: 12%;
+  right: 10%;
+  width: clamp(90px, 18cqw, 140px);
+  animation: float-swim-1 3.5s infinite ease-in-out alternate;
+}
+
+.loader-fish-decor.f-angry {
+  top: 48%;
+  right: 9%;
+  width: clamp(60px, 12cqw, 90px);
+  animation: float-swim-2 3.0s infinite ease-in-out alternate;
+}
+
+.loader-fish-decor.f-koi {
+  bottom: 12%;
+  right: 14%;
+  width: clamp(80px, 15cqw, 120px);
+  animation: float-swim-3 3.8s infinite ease-in-out alternate;
+}
+
+.loader-fish-decor.f-tang {
+  bottom: 14%;
+  left: 10%;
+  width: clamp(65px, 13cqw, 95px);
+  animation: float-swim-2 3.2s infinite ease-in-out alternate;
+}
+
+.loader-fish-decor.f-tetra {
+  top: 44%;
+  left: 12%;
+  width: clamp(50px, 10cqw, 75px);
+  animation: float-swim-1 2.8s infinite ease-in-out alternate;
+}
+
+@keyframes float-swim-1 {
+  0% { transform: translateY(0) rotate(-4deg); }
+  100% { transform: translateY(-14px) rotate(4deg); }
+}
+
+@keyframes float-swim-2 {
+  0% { transform: translateY(0) rotate(5deg); }
+  100% { transform: translateY(-10px) rotate(-5deg); }
+}
+
+@keyframes float-swim-3 {
+  0% { transform: translateY(-8px) rotate(-3deg); }
+  100% { transform: translateY(8px) rotate(3deg); }
+}
+
+/* Center Content Overlay: 3D Logo & Progress Box */
 .full-loader-content {
   position: relative;
   z-index: 10;
@@ -531,70 +644,141 @@ button,
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 36px 48px;
-  border-radius: 28px;
-  background: rgba(2, 28, 42, 0.78);
-  border: 1px solid rgba(140, 235, 216, 0.35);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55), inset 0 0 24px rgba(140, 235, 216, 0.12);
-  text-align: center;
-  max-width: 380px;
   width: 90%;
+  max-width: 440px;
+  text-align: center;
 }
 
-.loader-fish-badge {
-  font-size: 48px;
-  margin-bottom: 10px;
-  animation: fish-bounce 1.8s infinite ease-in-out alternate;
-  filter: drop-shadow(0 4px 14px rgba(56, 210, 245, 0.7));
+/* 3D Title Logo Wrapper */
+.logo-3d-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 0.88;
+  margin-bottom: 28px;
+  user-select: none;
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.75));
 }
 
-@keyframes fish-bounce {
-  0% { transform: translateY(0) rotate(-6deg); }
-  100% { transform: translateY(-10px) rotate(6deg); }
+.logo-text-tank {
+  font-family: "Baloo 2", "Outfit", sans-serif;
+  font-size: clamp(48px, 11cqw, 76px);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  background: linear-gradient(180deg, #ffffff 0%, #76d3ff 35%, #189ad4 70%, #005a96 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 5px 0 #072a42) drop-shadow(0 8px 12px rgba(0,0,0,0.5));
+  text-transform: uppercase;
 }
 
-.full-loader-title {
-  margin: 0 0 4px;
+.logo-text-amp-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: -10px 0;
+  z-index: 5;
+}
+
+.logo-amp {
   font-family: "Baloo 2", sans-serif;
-  font-size: 32px;
-  color: #ffe57f;
-  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
-  letter-spacing: 0.02em;
+  font-size: clamp(24px, 5cqw, 36px);
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 3px 0 #000, 0 0 10px rgba(255,255,255,0.8);
 }
 
-.full-loader-sub {
-  margin: 0 0 18px;
-  font-size: 14px;
-  font-weight: 700;
-  color: #8cebd8;
+.logo-hook-icon {
+  font-size: clamp(28px, 6cqw, 42px);
+  transform: rotate(-15deg);
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+  animation: hook-swing 2.5s infinite ease-in-out alternate;
+}
+
+@keyframes hook-swing {
+  0% { transform: rotate(-20deg) translateY(-2px); }
+  100% { transform: rotate(-5deg) translateY(2px); }
+}
+
+.logo-text-tackle {
+  font-family: "Baloo 2", "Outfit", sans-serif;
+  font-size: clamp(48px, 11cqw, 76px);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  background: linear-gradient(180deg, #fff2aa 0%, #ffc83b 40%, #ff9100 80%, #b84c00 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 5px 0 #4a1d00) drop-shadow(0 8px 12px rgba(0,0,0,0.5));
+  text-transform: uppercase;
+}
+
+/* Loader Progress Box */
+.loader-progress-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.loader-loading-label {
+  font-family: "Baloo 2", sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #ffffff;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85);
+  margin-bottom: 8px;
 }
 
 .full-loader-progress-track {
   width: 100%;
-  height: 12px;
+  max-width: 320px;
+  height: 22px;
   border-radius: 999px;
-  background: rgba(1, 20, 30, 0.75);
-  border: 1px solid rgba(140, 235, 216, 0.4);
+  background: rgba(1, 24, 38, 0.85);
+  border: 2px solid rgba(140, 235, 216, 0.6);
   overflow: hidden;
-  margin-bottom: 10px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+  position: relative;
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.7), 0 0 16px rgba(56, 210, 245, 0.4);
+  margin-bottom: 6px;
 }
 
 .full-loader-progress-fill {
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, #38c8e6 0%, #ffe57f 100%);
-  box-shadow: 0 0 12px rgba(255, 229, 127, 0.85);
+  background: linear-gradient(90deg, #0099ff 0%, #38c8e6 50%, #6effe6 100%);
+  box-shadow: 0 0 16px rgba(56, 210, 245, 0.9);
   transition: width 0.15s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-shine {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.25) 0px,
+    rgba(255, 255, 255, 0.25) 10px,
+    transparent 10px,
+    transparent 20px
+  );
+  animation: shine-slide 1.5s infinite linear;
+}
+
+@keyframes shine-slide {
+  0% { background-position-x: 0; }
+  100% { background-position-x: 28px; }
 }
 
 .full-loader-status {
   margin: 0;
   font-family: "Baloo 2", sans-serif;
-  font-size: 18px;
-  font-weight: 800;
-  color: #fff4ad;
+  font-size: 20px;
+  font-weight: 900;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
 }
 
 /* Welcome Back Card for Returning Players */

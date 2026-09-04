@@ -14,6 +14,10 @@ export function createUI(shell) {
     <div class="badge event-banner" data-event hidden></div>
     <!-- Full Screen Fish Tank Loading Overlay -->
     <div class="tank-loader-overlay" data-tank-loader>
+      <div class="loader-bg-image"></div>
+      <div class="loader-light-rays"></div>
+
+      <!-- Full Screen Rising Water Layer -->
       <div class="full-tank-water" data-water-fill style="height: 0%;">
         <div class="full-tank-wave wave-front"></div>
         <div class="full-tank-wave wave-back"></div>
@@ -25,14 +29,52 @@ export function createUI(shell) {
         <div class="tank-bubble b6"></div>
       </div>
 
+      <!-- Right Side Bubble Column -->
+      <div class="bubble-column-right">
+        <div class="tube-bubble tb1"></div>
+        <div class="tube-bubble tb2"></div>
+        <div class="tube-bubble tb3"></div>
+        <div class="tube-bubble tb4"></div>
+        <div class="tube-bubble tb5"></div>
+      </div>
+
+      <!-- Floating Fish Decor Graphics -->
+      <div class="loader-fish-decor f-shark">
+        <img src="/generated-assets/assets/mini_shark.png" alt="Mini Shark" />
+      </div>
+      <div class="loader-fish-decor f-angry">
+        <img src="/generated-assets/assets/angry_fish.png" alt="Angry Fish" />
+      </div>
+      <div class="loader-fish-decor f-koi">
+        <img src="/generated-assets/assets/pearl_koi.png" alt="Pearl Koi" />
+      </div>
+      <div class="loader-fish-decor f-tang">
+        <img src="/generated-assets/assets/lemon_tang.png" alt="Lemon Tang" />
+      </div>
+      <div class="loader-fish-decor f-tetra">
+        <img src="/generated-assets/assets/neon_tetra.png" alt="Neon Tetra" />
+      </div>
+
+      <!-- Center Content: 3D Title Logo & Progress Bar -->
       <div class="full-loader-content">
-        <div class="loader-fish-badge">🐠</div>
-        <h1 class="full-loader-title">Tank &amp; Tackle</h1>
-        <p class="full-loader-sub">Filling aquarium with water…</p>
-        <div class="full-loader-progress-track">
-          <div class="full-loader-progress-fill" data-progress-fill style="width: 0%;"></div>
+        <div class="logo-3d-wrapper">
+          <span class="logo-text-tank">TANK</span>
+          <div class="logo-text-amp-row">
+            <span class="logo-amp">&amp;</span>
+            <span class="logo-hook-icon">🎣</span>
+          </div>
+          <span class="logo-text-tackle">TACKLE</span>
         </div>
-        <p class="full-loader-status" data-loader-text>0%</p>
+
+        <div class="loader-progress-box">
+          <span class="loader-loading-label">LOADING...</span>
+          <div class="full-loader-progress-track">
+            <div class="full-loader-progress-fill" data-progress-fill style="width: 0%;">
+              <div class="progress-shine"></div>
+            </div>
+          </div>
+          <span class="full-loader-status" data-loader-text>0%</span>
+        </div>
       </div>
     </div>
 
