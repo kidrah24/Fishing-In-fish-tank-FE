@@ -452,8 +452,8 @@ button,
 .loader-bg-image {
   position: absolute;
   inset: 0;
-  background: url('/generated-assets/aquarium_bg.webp') center/cover no-repeat;
-  filter: brightness(0.65) saturate(1.2);
+  background: url('/generated-assets/loading_screen.jpg') center center / cover no-repeat;
+  filter: brightness(0.92) saturate(1.1);
   z-index: 1;
 }
 
@@ -779,6 +779,68 @@ button,
   font-weight: 900;
   color: #ffffff;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
+}
+
+/* Mobile Phone Responsive Adjustments for Tank Loader */
+@media (max-width: 768px), (max-aspect-ratio: 1/1) {
+  .loader-bg-image {
+    background-size: cover;
+    background-position: center center;
+  }
+
+  .full-loader-content {
+    max-width: 88vw;
+    padding: 0 10px;
+  }
+
+  .logo-3d-wrapper {
+    margin-bottom: 20px;
+    transform: scale(0.85);
+  }
+
+  .loader-fish-decor.f-shark {
+    top: 6%;
+    right: 3%;
+    width: clamp(65px, 20vw, 95px);
+  }
+
+  .loader-fish-decor.f-angry {
+    top: 40%;
+    right: 2%;
+    width: clamp(45px, 14vw, 70px);
+  }
+
+  .loader-fish-decor.f-koi {
+    bottom: 6%;
+    right: 4%;
+    width: clamp(55px, 16vw, 85px);
+  }
+
+  .loader-fish-decor.f-tang {
+    bottom: 6%;
+    left: 3%;
+    width: clamp(48px, 15vw, 75px);
+  }
+
+  .loader-fish-decor.f-tetra {
+    top: 36%;
+    left: 2%;
+    width: clamp(38px, 12vw, 60px);
+  }
+
+  .full-loader-progress-track {
+    max-width: 82vw;
+    height: 18px;
+  }
+
+  .full-loader-status {
+    font-size: 16px;
+  }
+
+  .bubble-column-right {
+    right: 2%;
+    opacity: 0.7;
+  }
 }
 
 /* Welcome Back Card for Returning Players */
