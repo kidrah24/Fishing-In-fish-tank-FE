@@ -12,68 +12,56 @@ export function createUI(shell) {
     </div>
     <div class="badge power-status" data-status hidden></div>
     <div class="badge event-banner" data-event hidden></div>
-    <!-- Full Screen Fish Tank Loading Overlay -->
-    <div class="tank-loader-overlay" data-tank-loader>
-      <div class="loader-bg-image"></div>
-      <div class="loader-light-rays"></div>
+    <!-- Vibrant Coral Reef & Fish Tank Loading Overlay -->
+    <div class="tank-loader-overlay theme-coral-reef" data-tank-loader>
+      <div class="coral-bg-layer"></div>
+      <div class="coral-caustics-layer"></div>
 
-      <!-- Full Screen Rising Water Layer -->
+      <!-- Full Screen Glowing Water Layer -->
       <div class="full-tank-water" data-water-fill style="height: 0%;">
         <div class="full-tank-wave wave-front"></div>
         <div class="full-tank-wave wave-back"></div>
-        <div class="tank-bubble b1"></div>
-        <div class="tank-bubble b2"></div>
-        <div class="tank-bubble b3"></div>
-        <div class="tank-bubble b4"></div>
-        <div class="tank-bubble b5"></div>
-        <div class="tank-bubble b6"></div>
+        
+        <!-- Bioluminescent Floating Bubbles -->
+        <div class="coral-bubble cb1"></div>
+        <div class="coral-bubble cb2"></div>
+        <div class="coral-bubble cb3"></div>
+        <div class="coral-bubble cb4"></div>
+        <div class="coral-bubble cb5"></div>
+        <div class="coral-bubble cb6"></div>
+        <div class="coral-bubble cb7"></div>
       </div>
 
-      <!-- Right Side Bubble Column -->
-      <div class="bubble-column-right">
-        <div class="tube-bubble tb1"></div>
-        <div class="tube-bubble tb2"></div>
-        <div class="tube-bubble tb3"></div>
-        <div class="tube-bubble tb4"></div>
-        <div class="tube-bubble tb5"></div>
-      </div>
-
-      <!-- Floating Fish Decor Graphics -->
-      <div class="loader-fish-decor f-shark">
-        <img src="/generated-assets/assets/mini_shark.png" alt="Mini Shark" />
-      </div>
-      <div class="loader-fish-decor f-angry">
-        <img src="/generated-assets/assets/angry_fish.png" alt="Angry Fish" />
-      </div>
-      <div class="loader-fish-decor f-koi">
+      <!-- Animated Coral Reef Swimming Fish -->
+      <div class="coral-swimmer swimmer-koi">
         <img src="/generated-assets/assets/pearl_koi.png" alt="Pearl Koi" />
       </div>
-      <div class="loader-fish-decor f-tang">
+      <div class="coral-swimmer swimmer-tang">
         <img src="/generated-assets/assets/lemon_tang.png" alt="Lemon Tang" />
       </div>
-      <div class="loader-fish-decor f-tetra">
+      <div class="coral-swimmer swimmer-beta">
+        <img src="/generated-assets/assets/royal_beta.png" alt="Royal Betta" />
+      </div>
+      <div class="coral-swimmer swimmer-tetra">
         <img src="/generated-assets/assets/neon_tetra.png" alt="Neon Tetra" />
       </div>
+      <div class="coral-swimmer swimmer-shark">
+        <img src="/generated-assets/assets/mini_shark.png" alt="Mini Shark" />
+      </div>
 
-      <!-- Center Content: 3D Title Logo & Progress Bar -->
-      <div class="full-loader-content">
-        <div class="logo-3d-wrapper">
-          <span class="logo-text-tank">TANK</span>
-          <div class="logo-text-amp-row">
-            <span class="logo-amp">&amp;</span>
-            <span class="logo-hook-icon">🎣</span>
-          </div>
-          <span class="logo-text-tackle">TACKLE</span>
-        </div>
-
-        <div class="loader-progress-box">
-          <span class="loader-loading-label">LOADING...</span>
-          <div class="full-loader-progress-track">
-            <div class="full-loader-progress-fill" data-progress-fill style="width: 0%;">
-              <div class="progress-shine"></div>
+      <!-- Center Coral Glass Card -->
+      <div class="coral-loader-card">
+        <div class="coral-badge-icon">🪸</div>
+        <h1 class="coral-loader-title">Tank &amp; Tackle</h1>
+        <p class="coral-loader-sub">Filling Aquarium &amp; Coral Reef…</p>
+        
+        <div class="coral-progress-wrapper">
+          <div class="coral-progress-track">
+            <div class="coral-progress-fill" data-progress-fill style="width: 0%;">
+              <div class="coral-progress-glow"></div>
             </div>
           </div>
-          <span class="full-loader-status" data-loader-text>0%</span>
+          <span class="coral-progress-text" data-loader-text>0%</span>
         </div>
       </div>
     </div>
