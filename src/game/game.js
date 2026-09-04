@@ -213,6 +213,13 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
           }
         });
       }
+      if (elements.changeSavedNameBtn) {
+        elements.changeSavedNameBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          ui.showNameInputMode();
+          if (elements.startNameInput) elements.startNameInput.focus();
+        });
+      }
 
       const getAsset = (key, fallback) => {
         try {
@@ -222,28 +229,51 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
         }
       };
 
-      Promise.all([
-        loadImage(getAsset("AQUARIUM_BG", "/generated-assets/aquarium_bg.webp")).catch(() => null),
-        loadImage(getAsset("ANGRY_FISH", "/generated-assets/assets/angry_fish.png")).catch(() => null),
-        loadImage(getAsset("CRAB", "/generated-assets/assets/crab.png")).catch(() => null),
-        loadImage(getAsset("ELECTRIC_FISH", "/generated-assets/assets/electric_fish.png")).catch(() => null),
-        loadImage(getAsset("EMBER_FISH", "/generated-assets/assets/ember_fish.png")).catch(() => null),
-        loadImage(getAsset("FISH_FOOD", "/generated-assets/assets/fish_food.png")).catch(() => null),
-        loadImage(getAsset("HOOK_BAIT", "/generated-assets/assets/hook_bait.png")).catch(() => null),
-        loadImage(getAsset("LEMON_TANG", "/generated-assets/assets/lemon_tang.png")).catch(() => null),
-        loadImage(getAsset("MINI_SHARK", "/generated-assets/assets/mini_shark.png")).catch(() => null),
-        loadImage(getAsset("NEON_TETRA", "/generated-assets/assets/neon_tetra.png")).catch(() => null),
-        loadImage(getAsset("OCTOPUS", "/generated-assets/assets/octopus.png")).catch(() => null),
-        loadImage(getAsset("PEARL_KOI", "/generated-assets/assets/pearl_koi.png")).catch(() => null),
-        loadImage(getAsset("PIRATE_TREASURE", "/generated-assets/assets/pirate_treasure.png")).catch(() => null),
-        loadImage(getAsset("PUFFER_FISH", "/generated-assets/assets/puffer_fish.png")).catch(() => null),
-        loadImage(getAsset("RAINBOW_FISH", "/generated-assets/assets/rainbow_fish.png")).catch(() => null),
-        loadImage(getAsset("ROYAL_BETA", "/generated-assets/assets/royal_beta.png")).catch(() => null),
-        loadImage(getAsset("SCHOOL_FISH", "/generated-assets/assets/school_fish.png")).catch(() => null),
-        loadImage(getAsset("SPECTRAL_PEARL", "/generated-assets/assets/spectral_pearl.png")).catch(() => null),
-        loadImage(getAsset("TIMID_FISH", "/generated-assets/assets/timid_fish.png")).catch(() => null),
-        loadImage(getAsset("GHOST_FISH", "/generated-assets/assets/ghost_fish.png")).catch(() => null),
-      ]).then(([
+      const assetUrls = [
+        getAsset("AQUARIUM_BG", "/generated-assets/aquarium_bg.webp"),
+        getAsset("ANGRY_FISH", "/generated-assets/assets/angry_fish.png"),
+        getAsset("CRAB", "/generated-assets/assets/crab.png"),
+        getAsset("ELECTRIC_FISH", "/generated-assets/assets/electric_fish.png"),
+        getAsset("EMBER_FISH", "/generated-assets/assets/ember_fish.png"),
+        getAsset("FISH_FOOD", "/generated-assets/assets/fish_food.png"),
+        getAsset("HOOK_BAIT", "/generated-assets/assets/hook_bait.png"),
+        getAsset("LEMON_TANG", "/generated-assets/assets/lemon_tang.png"),
+        getAsset("MINI_SHARK", "/generated-assets/assets/mini_shark.png"),
+        getAsset("NEON_TETRA", "/generated-assets/assets/neon_tetra.png"),
+        getAsset("OCTOPUS", "/generated-assets/assets/octopus.png"),
+        getAsset("PEARL_KOI", "/generated-assets/assets/pearl_koi.png"),
+        getAsset("PIRATE_TREASURE", "/generated-assets/assets/pirate_treasure.png"),
+        getAsset("PUFFER_FISH", "/generated-assets/assets/puffer_fish.png"),
+        getAsset("RAINBOW_FISH", "/generated-assets/assets/rainbow_fish.png"),
+        getAsset("ROYAL_BETA", "/generated-assets/assets/royal_beta.png"),
+        getAsset("SCHOOL_FISH", "/generated-assets/assets/school_fish.png"),
+        getAsset("SPECTRAL_PEARL", "/generated-assets/assets/spectral_pearl.png"),
+        getAsset("TIMID_FISH", "/generated-assets/assets/timid_fish.png"),
+        getAsset("GHOST_FISH", "/generated-assets/assets/ghost_fish.png"),
+      ];
+
+      let loadedAssetsCount = 0;
+      const totalAssetsCount = assetUrls.length;
+
+      function onAssetProgress() {
+        loadedAssetsCount += 1;
+        const pct = Math.min(100, Math.round((loadedAssetsCount / totalAssetsCount) * 100));
+        ui.setLoadingProgress(pct);
+      }
+
+      Promise.all(
+        assetUrls.map((url) =>
+          loadImage(url)
+            .then((img) => {
+              onAssetProgress();
+              return img;
+            })
+            .catch(() => {
+              onAssetProgress();
+              return null;
+            })
+        )
+      ).then(([
         background, angryFish, crab, electricFish, emberFish, fishFood,
         hookBait, lemonTang, miniShark, neonTetra, octopus, pearlKoi,
         pirateTreasure, pufferFish, rainbowFish, royalBeta, schoolFish,
@@ -265,8 +295,11 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
         resizeObserver.observe(shell);
         resize();
         ready = true;
-        ui.setStartNameInput(getPlayerName());
+        const savedName = getPlayerName();
+        ui.updateNameView(Boolean(savedName), savedName);
+        ui.setStartNameInput(savedName);
         ui.setReady();
+        ui.hideTankLoader();
         void fetchGlobalLeaderboard().catch(() => { });
       }).catch((err) => {
         console.error("Asset loading error:", err);

@@ -12,13 +12,32 @@ export function createUI(shell) {
     </div>
     <div class="badge power-status" data-status hidden></div>
     <div class="badge event-banner" data-event hidden></div>
+    <div class="tank-loader-overlay" data-tank-loader>
+      <div class="loader-card">
+        <div class="vessel-container">
+          <div class="vessel-glass">
+            <div class="vessel-water" data-water-fill style="height: 0%;">
+              <div class="vessel-wave"></div>
+              <div class="bubble b1"></div>
+              <div class="bubble b2"></div>
+              <div class="bubble b3"></div>
+            </div>
+            <span class="vessel-fish">🐠</span>
+          </div>
+        </div>
+        <h2 class="loader-title">Tank &amp; Tackle</h2>
+        <p class="loader-status" data-loader-text>Filling fish tank with water… 0%</p>
+      </div>
+    </div>
+
     <div class="hint" data-hint>Watch their tells · every fish behaves differently</div>
     <div class="start-overlay" data-start>
       <div class="start-card">
         <h1>Tank &amp; Tackle</h1>
         <p class="start-tagline">60s Aquarium Fishing Challenge</p>
 
-        <div class="start-name-card">
+        <!-- First-Time Player Name Input -->
+        <div class="start-name-card" data-first-time-card>
           <label for="start-name-input" class="start-name-label">🎮 ENTER YOUR NAME</label>
           <div class="start-name-wrapper">
             <span class="start-name-icon">🎣</span>
@@ -33,6 +52,16 @@ export function createUI(shell) {
             />
           </div>
           <p data-name-taken-error class="start-name-error" hidden></p>
+        </div>
+
+        <!-- Returning Player Welcome Back Card -->
+        <div class="welcome-back-card" data-welcome-card hidden>
+          <span class="welcome-label">WELCOME BACK</span>
+          <div class="welcome-player-row">
+            <span class="welcome-avatar">🎣</span>
+            <strong class="welcome-name" data-welcome-name-display>Angler 1</strong>
+            <button class="change-name-btn" type="button" data-change-saved-name title="Change Name">✏️ Edit</button>
+          </div>
         </div>
 
         <div class="start-buttons-row">
@@ -293,9 +322,16 @@ export function createUI(shell) {
     hint: shell.querySelector("[data-hint]"),
     start: shell.querySelector("[data-start]"),
     startLabel: shell.querySelector("[data-start-label]"),
+    firstTimeCard: shell.querySelector("[data-first-time-card]"),
+    welcomeCard: shell.querySelector("[data-welcome-card]"),
+    welcomeNameDisplay: shell.querySelector("[data-welcome-name-display]"),
+    changeSavedNameBtn: shell.querySelector("[data-change-saved-name]"),
     startNameInput: shell.querySelector("[data-start-name-input]"),
     nameTakenError: shell.querySelector("[data-name-taken-error]"),
     startPlayBtn: shell.querySelector("[data-start-play]"),
+    tankLoader: shell.querySelector("[data-tank-loader]"),
+    waterFill: shell.querySelector("[data-water-fill]"),
+    loaderText: shell.querySelector("[data-loader-text]"),
     result: shell.querySelector("[data-result]"),
     resultScore: shell.querySelector("[data-result-score]"),
     alltimeScore: shell.querySelector("[data-alltime-score]"),
@@ -428,6 +464,32 @@ export function createUI(shell) {
     closeGuide,
     getStartNameInput() { return elements.startNameInput?.value.trim() || ""; },
     setStartNameInput(val) { if (elements.startNameInput) elements.startNameInput.value = val; },
+    setLoadingProgress(pct) {
+      if (elements.waterFill) elements.waterFill.style.height = `${pct}%`;
+      if (elements.loaderText) elements.loaderText.textContent = `Filling fish tank with water… ${pct}%`;
+    },
+    hideTankLoader() {
+      if (elements.tankLoader) {
+        elements.tankLoader.classList.add("is-loaded");
+        setTimeout(() => {
+          elements.tankLoader.hidden = true;
+        }, 500);
+      }
+    },
+    updateNameView(hasSavedName, name) {
+      if (hasSavedName && name) {
+        if (elements.firstTimeCard) elements.firstTimeCard.hidden = true;
+        if (elements.welcomeCard) elements.welcomeCard.hidden = false;
+        if (elements.welcomeNameDisplay) elements.welcomeNameDisplay.textContent = name;
+      } else {
+        if (elements.firstTimeCard) elements.firstTimeCard.hidden = false;
+        if (elements.welcomeCard) elements.welcomeCard.hidden = true;
+      }
+    },
+    showNameInputMode() {
+      if (elements.firstTimeCard) elements.firstTimeCard.hidden = false;
+      if (elements.welcomeCard) elements.welcomeCard.hidden = true;
+    },
     setNameTakenError(msg) {
       if (elements.nameTakenError) {
         elements.nameTakenError.textContent = msg;
