@@ -31,7 +31,7 @@ function hashString(str) {
   return (hash >>> 0).toString(36);
 }
 
-export function getPlayerToken() {
+function getPlayerToken() {
   try {
     let token = localStorage.getItem(TOKEN_KEY);
     if (!token || typeof token !== "string" || token.length < 8) {
@@ -44,7 +44,7 @@ export function getPlayerToken() {
   }
 }
 
-export function getOwnerTokenHash() {
+function getOwnerTokenHash() {
   return hashString(getPlayerToken() + "_owner_secret");
 }
 
@@ -75,7 +75,7 @@ export function setPlayerName(name) {
   return clean;
 }
 
-export function loadLeaderboard() {
+function loadLeaderboard() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
@@ -100,7 +100,7 @@ export function loadLeaderboard() {
   return [];
 }
 
-export function saveLeaderboard(entries) {
+function saveLeaderboard(entries) {
   try {
     const cleanEntries = entries.map((e) => ({
       name: (e.name || "").trim().slice(0, 16),
@@ -137,7 +137,7 @@ export function isNameTaken(name, cachedCloudEntries = []) {
   return false;
 }
 
-export function mergeEntries(localList = [], cloudList = []) {
+function mergeEntries(localList = [], cloudList = []) {
   const currentPlayer = getPlayerName() || "Angler 1";
   const myOwnerHash = getOwnerTokenHash();
   const map = new Map();
@@ -187,7 +187,7 @@ export function mergeEntries(localList = [], cloudList = []) {
   });
 }
 
-export function formatLeaderboardState(entries, currentScore = 0) {
+function formatLeaderboardState(entries, currentScore = 0) {
   const playerName = getPlayerName() || "Angler 1";
   const myOwnerHash = getOwnerTokenHash();
   const userEntry = entries.find((e) => e.isUser || (e.name.toLowerCase() === playerName.toLowerCase() && (!e.ownerToken || e.ownerToken === myOwnerHash)));
@@ -233,7 +233,7 @@ export async function fetchGlobalLeaderboard(currentScore = 0) {
   return formatLeaderboardState(mergeEntries(localEntries, cachedCloudEntries), currentScore);
 }
 
-export function verifyRoundToken(score, token) {
+function verifyRoundToken(score, token) {
   if (typeof score !== "number" || isNaN(score) || score < 0 || score > MAX_REALISTIC_SCORE) {
     return false;
   }
@@ -259,7 +259,7 @@ export function createRoundToken(score, catchesCount, nonce) {
   return { score, catchesCount, nonce, sig };
 }
 
-export async function syncScoreToCloud(score, validationToken, onUpdate) {
+async function syncScoreToCloud(score, validationToken, onUpdate) {
   const playerName = getPlayerName() || "Angler 1";
   const myOwnerHash = getOwnerTokenHash();
 

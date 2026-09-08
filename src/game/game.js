@@ -350,7 +350,6 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
         sound.destroy();
         ui.destroy();
         unsubs.forEach((unsubscribe) => unsubscribe());
-        elements.start.removeEventListener("pointerup", activate);
         elements.start.removeEventListener("click", activate);
         elements.replay.removeEventListener("click", beginRound);
         elements.sound.removeEventListener("click", toggleSound);

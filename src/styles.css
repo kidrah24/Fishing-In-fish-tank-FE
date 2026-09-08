@@ -778,67 +778,7 @@ button,
   text-align: left;
 }
 
-/* Mobile Phone Responsive Adjustments for Tank Loader */
-@media (max-width: 768px), (max-aspect-ratio: 1/1) {
-  .loader-bg-image {
-    background-size: cover;
-    background-position: center center;
-  }
 
-  .full-loader-content {
-    max-width: 88vw;
-    padding: 0 10px;
-  }
-
-  .logo-3d-wrapper {
-    margin-bottom: 20px;
-    transform: scale(0.85);
-  }
-
-  .loader-fish-decor.f-shark {
-    top: 6%;
-    right: 3%;
-    width: clamp(65px, 20vw, 95px);
-  }
-
-  .loader-fish-decor.f-angry {
-    top: 40%;
-    right: 2%;
-    width: clamp(45px, 14vw, 70px);
-  }
-
-  .loader-fish-decor.f-koi {
-    bottom: 6%;
-    right: 4%;
-    width: clamp(55px, 16vw, 85px);
-  }
-
-  .loader-fish-decor.f-tang {
-    bottom: 6%;
-    left: 3%;
-    width: clamp(48px, 15vw, 75px);
-  }
-
-  .loader-fish-decor.f-tetra {
-    top: 36%;
-    left: 2%;
-    width: clamp(38px, 12vw, 60px);
-  }
-
-  .full-loader-progress-track {
-    max-width: 82vw;
-    height: 18px;
-  }
-
-  .full-loader-status {
-    font-size: 16px;
-  }
-
-  .bubble-column-right {
-    right: 2%;
-    opacity: 0.7;
-  }
-}
 
 /* Welcome Back Card for Returning Players */
 .welcome-back-card {
@@ -1601,15 +1541,7 @@ button,
   transition: transform 0.15s ease;
 }
 
-@keyframes float-title {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-7px); }
-}
 
-@keyframes prompt-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.035); }
-}
 
 @keyframes combo-pop {
   from { transform: scale(0.72); }
@@ -1634,12 +1566,9 @@ button,
   .hint { inset-block-end: 10px; }
   .score-badge, .time-badge, .sound-button { min-height: 40px; height: 40px; }
   .sound-button { width: 40px; }
-  .result-panel { padding: 18px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .start-copy,
-  .start-overlay.is-ready .start-copy p,
   .time-badge.is-low,
   .combo-badge {
     animation: none;
