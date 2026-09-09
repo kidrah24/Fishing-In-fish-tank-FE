@@ -88,7 +88,6 @@ function loadLeaderboard() {
           console.warn("Leaderboard tampering detected in LocalStorage! Tampered score reset.");
         }
       } else if (Array.isArray(parsed)) {
-        // Migration from legacy array format
         const valid = parsed.filter((e) => e && e.name && !DUMMY_NAMES.has(e.name));
         saveLeaderboard(valid);
         return valid;
@@ -124,8 +123,11 @@ export function isNameTaken(name, cachedCloudEntries = []) {
   if (!cleanName) return false;
 
   const currentOwnerHash = getOwnerTokenHash();
-  const localEntries = loadLeaderboard();
+  const currentSavedName = (getPlayerName() || "").trim().toLowerCase();
 
+  if (cleanName === currentSavedName) return false;
+
+  const localEntries = loadLeaderboard();
   const allEntries = [...localEntries, ...cachedCloudEntries];
   for (const entry of allEntries) {
     if (entry && entry.name && entry.name.trim().toLowerCase() === cleanName) {
@@ -148,7 +150,8 @@ function mergeEntries(localList = [], cloudList = []) {
     if (!cleanName) return;
     const key = cleanName.toLowerCase();
     const scoreVal = Math.max(0, Math.min(MAX_REALISTIC_SCORE, Number(e.score) || 0));
-    const ownerToken = e.ownerToken || (key === currentPlayer.toLowerCase() ? myOwnerHash : undefined);
+    const isCurrentPlayer = key === currentPlayer.toLowerCase();
+    const ownerToken = e.ownerToken || (isCurrentPlayer ? myOwnerHash : undefined);
 
     const existing = map.get(key);
     if (!existing) {
@@ -159,26 +162,25 @@ function mergeEntries(localList = [], cloudList = []) {
         ownerToken,
       });
     } else {
-      // If owner mismatch, prefer the entry from original owner
-      if (existing.ownerToken && ownerToken && existing.ownerToken !== ownerToken) {
-        // Keep existing owner's score
-        return;
-      }
       if (scoreVal > existing.score) {
         existing.score = scoreVal;
-        if (ownerToken) existing.ownerToken = ownerToken;
+        if (ownerToken || isCurrentPlayer) {
+          existing.ownerToken = ownerToken || myOwnerHash;
+        }
+      } else if (isCurrentPlayer && myOwnerHash) {
+        existing.ownerToken = myOwnerHash;
       }
     }
   };
 
-  localList.forEach(processEntry);
   cloudList.forEach(processEntry);
+  localList.forEach(processEntry);
 
   const merged = Array.from(map.values());
   merged.sort((a, b) => b.score - a.score);
 
   return merged.map((entry, idx) => {
-    const isUser = entry.name.toLowerCase() === currentPlayer.toLowerCase() && (!entry.ownerToken || entry.ownerToken === myOwnerHash);
+    const isUser = entry.name.toLowerCase() === currentPlayer.toLowerCase();
     return {
       ...entry,
       rank: idx + 1,
@@ -189,12 +191,11 @@ function mergeEntries(localList = [], cloudList = []) {
 
 function formatLeaderboardState(entries, currentScore = 0) {
   const playerName = getPlayerName() || "Angler 1";
-  const myOwnerHash = getOwnerTokenHash();
-  const userEntry = entries.find((e) => e.isUser || (e.name.toLowerCase() === playerName.toLowerCase() && (!e.ownerToken || e.ownerToken === myOwnerHash)));
-  const userRank = userEntry ? userEntry.rank : entries.length || 1;
+  const userEntry = entries.find((e) => e.isUser || e.name.toLowerCase() === playerName.toLowerCase());
+  const userRank = userEntry ? userEntry.rank : entries.length ? entries.length + 1 : 1;
   const allTimeHighScore = entries[0] ? entries[0].score : currentScore;
   const allTimeLeader = entries[0] ? entries[0].name : playerName;
-  const userBest = userEntry ? userEntry.score : currentScore;
+  const userBest = userEntry ? Math.max(userEntry.score, currentScore) : currentScore;
 
   return {
     currentScore,
@@ -237,7 +238,7 @@ function verifyRoundToken(score, token) {
   if (typeof score !== "number" || isNaN(score) || score < 0 || score > MAX_REALISTIC_SCORE) {
     return false;
   }
-  if (score === 0) return true; // Zero score is allowed without token
+  if (score === 0) return true;
   if (!token || typeof token !== "object") {
     console.warn("Score rejected: Missing round validation token.");
     return false;
@@ -259,6 +260,27 @@ export function createRoundToken(score, catchesCount, nonce) {
   return { score, catchesCount, nonce, sig };
 }
 
+async function putToCloudWithRetry(cleanCloudPayload, retries = 3) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const putRes = await fetch(CLOUD_API_URL, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: CLOUD_BIN_NAME,
+          data: { entries: cleanCloudPayload },
+        }),
+      });
+      if (putRes.ok) return true;
+      console.warn(`Cloud PUT attempt ${attempt} failed with status:`, putRes.status);
+    } catch (err) {
+      console.warn(`Cloud PUT attempt ${attempt} network error:`, err);
+    }
+    await new Promise((res) => setTimeout(res, attempt * 400));
+  }
+  return false;
+}
+
 async function syncScoreToCloud(score, validationToken, onUpdate) {
   const playerName = getPlayerName() || "Angler 1";
   const myOwnerHash = getOwnerTokenHash();
@@ -275,11 +297,10 @@ async function syncScoreToCloud(score, validationToken, onUpdate) {
 
   let userIndex = localEntries.findIndex((e) => e.name.toLowerCase() === playerName.toLowerCase());
   if (userIndex >= 0) {
-    if (!localEntries[userIndex].ownerToken || localEntries[userIndex].ownerToken === myOwnerHash) {
-      localEntries[userIndex].ownerToken = myOwnerHash;
-      if (score > localEntries[userIndex].score) {
-        localEntries[userIndex].score = score;
-      }
+    localEntries[userIndex].name = playerName;
+    localEntries[userIndex].ownerToken = myOwnerHash;
+    if (score > localEntries[userIndex].score) {
+      localEntries[userIndex].score = score;
     }
   } else {
     localEntries.push({ name: playerName, score, avatar: "🎣", ownerToken: myOwnerHash });
@@ -302,20 +323,11 @@ async function syncScoreToCloud(score, validationToken, onUpdate) {
     const cleanCloudPayload = merged.map((e) => ({
       name: e.name,
       score: e.score,
-      avatar: e.avatar || "🎣",
       ownerToken: e.ownerToken,
     }));
 
-    const putRes = await fetch(CLOUD_API_URL, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: CLOUD_BIN_NAME,
-        data: { entries: cleanCloudPayload },
-      }),
-    });
-
-    if (putRes.ok) {
+    const success = await putToCloudWithRetry(cleanCloudPayload);
+    if (success) {
       const state = formatLeaderboardState(merged, score);
       if (typeof onUpdate === "function") {
         onUpdate(state);
@@ -349,13 +361,11 @@ export function recordScore(score, validationToken, onCloudSync) {
   const entries = loadLeaderboard();
   let userIndex = entries.findIndex((e) => e.name.toLowerCase() === playerName.toLowerCase());
   if (userIndex >= 0) {
-    if (!entries[userIndex].ownerToken || entries[userIndex].ownerToken === myOwnerHash) {
-      entries[userIndex].isUser = true;
-      entries[userIndex].name = playerName;
-      entries[userIndex].ownerToken = myOwnerHash;
-      if (score > entries[userIndex].score) {
-        entries[userIndex].score = score;
-      }
+    entries[userIndex].isUser = true;
+    entries[userIndex].name = playerName;
+    entries[userIndex].ownerToken = myOwnerHash;
+    if (score > entries[userIndex].score) {
+      entries[userIndex].score = score;
     }
   } else {
     entries.push({
@@ -375,4 +385,5 @@ export function recordScore(score, validationToken, onCloudSync) {
 
   return initialState;
 }
+
 
