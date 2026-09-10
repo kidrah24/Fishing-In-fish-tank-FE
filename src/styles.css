@@ -828,22 +828,7 @@ button,
   font-weight: 800;
 }
 
-.change-name-btn {
-  padding: 3px 10px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 229, 127, 0.4);
-  background: rgba(255, 229, 127, 0.12);
-  color: #ffe57f;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
 
-.change-name-btn:hover {
-  background: rgba(255, 229, 127, 0.28);
-  transform: scale(1.05);
-}
 
 .start-status-label {
   margin: 2px 0 0;
@@ -900,7 +885,7 @@ button,
   line-height: 1.1;
 }
 
-.name-edit-btn {
+.player-name-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -911,14 +896,7 @@ button,
   color: #ffd661;
   font-size: 13px;
   font-weight: 800;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.name-edit-btn:hover {
-  background: rgba(7, 85, 115, 0.9);
-  border-color: #ffd661;
-  transform: scale(1.03);
+  user-select: none;
 }
 
 /* 3-Column Summary Cards */

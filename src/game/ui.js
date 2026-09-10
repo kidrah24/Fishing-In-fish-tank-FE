@@ -104,7 +104,6 @@ export function createUI(shell) {
           <div class="welcome-player-row">
             <span class="welcome-avatar">🎣</span>
             <strong class="welcome-name" data-welcome-name-display>Angler 1</strong>
-            <button class="change-name-btn" type="button" data-change-saved-name title="Change Name">✏️ Edit</button>
           </div>
         </div>
 
@@ -307,9 +306,9 @@ export function createUI(shell) {
             <span class="result-kicker">TIME'S UP! ⏱️</span>
             <h2>Game Results</h2>
           </div>
-          <button class="name-edit-btn" type="button" data-edit-name title="Tap to change player name">
-            ✏️ <span data-player-name-display>Player 1</span>
-          </button>
+          <div class="player-name-badge">
+            🎣 <span data-player-name-display>Player 1</span>
+          </div>
         </div>
 
         <!-- Top Summary Cards (Current Score, All-Time High Score, Global Rank) -->
@@ -369,7 +368,6 @@ export function createUI(shell) {
     firstTimeCard: shell.querySelector("[data-first-time-card]"),
     welcomeCard: shell.querySelector("[data-welcome-card]"),
     welcomeNameDisplay: shell.querySelector("[data-welcome-name-display]"),
-    changeSavedNameBtn: shell.querySelector("[data-change-saved-name]"),
     startNameInput: shell.querySelector("[data-start-name-input]"),
     nameTakenError: shell.querySelector("[data-name-taken-error]"),
     startPlayBtn: shell.querySelector("[data-start-play]"),
@@ -386,7 +384,6 @@ export function createUI(shell) {
     userRank: shell.querySelector("[data-user-rank]"),
     rankSub: shell.querySelector("[data-rank-sub]"),
     playerNameDisplay: shell.querySelector("[data-player-name-display]"),
-    editNameBtn: shell.querySelector("[data-edit-name]"),
     lbList: shell.querySelector("[data-lb-list]"),
     lbTabs: shell.querySelectorAll("[data-lb-tab]"),
     replay: shell.querySelector("[data-replay]"),

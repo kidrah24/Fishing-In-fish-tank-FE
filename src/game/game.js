@@ -193,33 +193,7 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
       if (elements.guidePlay) {
         elements.guidePlay.addEventListener("click", handleGuidePlay);
       }
-      if (elements.editNameBtn) {
-        elements.editNameBtn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          const current = getPlayerName() || "Angler 1";
-          const next = window.prompt("Enter your player name for the global leaderboard:", current);
-          if (next !== null && next.trim()) {
-            const clean = next.trim();
-            if (isNameTaken(clean, getCachedCloudEntries())) {
-              window.alert(`⚠️ The name "${clean}" is already claimed by another player!\n\nPlease choose a different unique username.`);
-              return;
-            }
-            setPlayerName(clean);
-            ui.setStartNameInput(clean);
-            if (lastValidationToken) {
-              const lbData = recordScore(lastValidationToken.score, lastValidationToken, (updatedLbData) => ui.showResults(updatedLbData));
-              ui.showResults(lbData);
-            }
-          }
-        });
-      }
-      if (elements.changeSavedNameBtn) {
-        elements.changeSavedNameBtn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          ui.showNameInputMode();
-          if (elements.startNameInput) elements.startNameInput.focus();
-        });
-      }
+
 
       const getAsset = (key, fallback) => {
         try {
