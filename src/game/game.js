@@ -7,11 +7,22 @@ import { createUI } from "./ui.js";
 import { recordScore, getPlayerName, setPlayerName, fetchGlobalLeaderboard, isNameTaken, getCachedCloudEntries } from "./leaderboard.js";
 
 function loadImage(url) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const image = new Image();
     image.decoding = "async";
-    image.onload = () => resolve(image);
-    image.onerror = () => reject(new Error(`Failed to load image: ${url}`));
+    const timer = setTimeout(() => resolve(image), 3000);
+    image.onload = () => {
+      clearTimeout(timer);
+      if (image.decode) {
+        image.decode().catch(() => {}).finally(() => resolve(image));
+      } else {
+        resolve(image);
+      }
+    };
+    image.onerror = () => {
+      clearTimeout(timer);
+      resolve(null);
+    };
     image.src = url;
   });
 }
@@ -237,15 +248,15 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
       function updateLoaderLoop() {
         if (assetLoadComplete) {
           targetDisplayPct = 100;
+          currentDisplayPct = Math.min(100, currentDisplayPct + 12);
         } else {
-          const rawPct = (loadedAssetsCount / totalAssetsCount) * 85;
-          targetDisplayPct = Math.max(targetDisplayPct + 0.65, rawPct);
+          const rawPct = (loadedAssetsCount / totalAssetsCount) * 90;
+          targetDisplayPct = Math.max(targetDisplayPct + 1.5, rawPct);
+          if (currentDisplayPct < targetDisplayPct) {
+            currentDisplayPct = Math.min(targetDisplayPct, currentDisplayPct + 4);
+          }
         }
-
-        if (currentDisplayPct < targetDisplayPct) {
-          currentDisplayPct = Math.min(targetDisplayPct, currentDisplayPct + 1.2);
-          ui.setLoadingProgress(currentDisplayPct);
-        }
+        ui.setLoadingProgress(currentDisplayPct);
 
         if (currentDisplayPct >= 100 && assetLoadComplete) {
           ui.setLoadingProgress(100);

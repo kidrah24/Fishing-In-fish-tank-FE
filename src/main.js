@@ -14,7 +14,7 @@ try {
 
 const app = document.querySelector("#app");
 
-const withTimeout = (promise, ms = 1000, fallback = null) =>
+const withTimeout = (promise, ms = 500, fallback = null) =>
   Promise.race([
     promise,
     new Promise((resolve) => setTimeout(() => resolve(fallback), ms)),
@@ -35,13 +35,16 @@ const createFallbackTweaks = (manifest) => {
   };
 };
 
-const ready = await withTimeout(sdk.ready(), 1000);
-const tweaks = (await withTimeout(sdk.tweaks.init(tweaksManifest), 1000)) || createFallbackTweaks(tweaksManifest);
-const assets = Object.keys(assetsManifest).length > 0
-  ? await withTimeout(sdk.assets.register(assetsManifest), 1000)
-  : undefined;
-const saved = await withTimeout(sdk.gameState.load(), 800);
-const audio = await withTimeout(sdk.audio.getContext(), 800);
+const [ready, tweaksRes, assetsRes, saved, audio] = await Promise.all([
+  withTimeout(sdk.ready(), 500),
+  withTimeout(sdk.tweaks.init(tweaksManifest), 500),
+  Object.keys(assetsManifest).length > 0 ? withTimeout(sdk.assets.register(assetsManifest), 500) : Promise.resolve(undefined),
+  withTimeout(sdk.gameState.load(), 500),
+  withTimeout(sdk.audio.getContext(), 500),
+]);
+
+const tweaks = tweaksRes || createFallbackTweaks(tweaksManifest);
+const assets = assetsRes;
 
 const safeSdk = {
   ...sdk,
