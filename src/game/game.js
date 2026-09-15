@@ -90,7 +90,11 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
         },
         onEnd: (score, validationToken) => {
           lastValidationToken = validationToken;
-          const lbData = recordScore(score, validationToken, (updatedLbData) => ui.showResults(updatedLbData));
+          const lbData = recordScore(score, validationToken, (updatedLbData) => {
+            if (!simulation?.state.running && ui.isResultsOpen()) {
+              ui.showResults(updatedLbData);
+            }
+          });
           bestScore = Math.max(bestScore, lbData.userBest);
           posthog?.capture("game_round_completed", {
             score,
@@ -133,6 +137,11 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
 
       function beginRound() {
         if (!ready) return;
+        if (input?.state) {
+          input.state.casting = false;
+          input.state.left = false;
+          input.state.right = false;
+        }
         ui.hideResults();
         ui.closeGuide();
         simulation.reset();
@@ -199,7 +208,10 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
         if (e.target.closest("[data-open-guide]") || e.target.closest("input")) return;
         activate();
       });
-      elements.replay.addEventListener("click", beginRound);
+      elements.replay.addEventListener("click", (e) => {
+        e.stopPropagation();
+        beginRound();
+      });
       elements.sound.addEventListener("click", toggleSound);
       if (elements.guidePlay) {
         elements.guidePlay.addEventListener("click", handleGuidePlay);

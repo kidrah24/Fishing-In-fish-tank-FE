@@ -504,6 +504,7 @@ export function createUI(shell) {
   return {
     elements,
     isGuideOpen: () => isGuideOpen,
+    isResultsOpen: () => !elements.result.hidden,
     openGuide,
     closeGuide,
     getStartNameInput() { return elements.startNameInput?.value.trim() || ""; },
