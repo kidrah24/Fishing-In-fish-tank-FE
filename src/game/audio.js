@@ -6,6 +6,7 @@ export function createAudioController(audioHandle, initialVolume) {
   let musicStep = 0;
   let started = false;
   let muted = false;
+  let isPlaying = false;
   let volume = initialVolume;
   const active = new Set();
 
@@ -18,8 +19,20 @@ export function createAudioController(audioHandle, initialVolume) {
     musicGain.connect(master);
   }
 
+  function stopActiveNodes() {
+    active.forEach((node) => {
+      try {
+        node.stop?.();
+        node.disconnect?.();
+      } catch {
+        // Ignore errors if node is already stopped or disconnected
+      }
+    });
+    active.clear();
+  }
+
   function tone(frequency, duration, gainValue, type = "sine", destination = master, delay = 0) {
-    if (!context || context.state !== "running" || muted) return;
+    if (!context || context.state !== "running" || muted || document.hidden || !isPlaying) return;
     const now = context.currentTime + delay;
     const oscillator = context.createOscillator();
     const gain = context.createGain();
@@ -40,7 +53,8 @@ export function createAudioController(audioHandle, initialVolume) {
   }
 
   function scheduleMusic() {
-    if (!started) return;
+    window.clearTimeout(musicTimer);
+    if (!started || !isPlaying || muted || document.hidden || context?.state !== "running") return;
     const notes = [261.63, 329.63, 392, 493.88, 392, 329.63, 293.66, 392];
     tone(notes[musicStep % notes.length], 1.35, 0.16, "sine", musicGain);
     if (musicStep % 2 === 0) tone(notes[(musicStep + 2) % notes.length] / 2, 1.8, 0.08, "triangle", musicGain, 0.08);
@@ -48,15 +62,70 @@ export function createAudioController(audioHandle, initialVolume) {
     musicTimer = window.setTimeout(scheduleMusic, 1450);
   }
 
+  function suspendAudio() {
+    window.clearTimeout(musicTimer);
+    stopActiveNodes();
+    if (context && context.state === "running") {
+      void context.suspend().catch(() => {});
+    }
+  }
+
+  function resumeAudio() {
+    if (started && isPlaying && !muted && !document.hidden) {
+      if (context && context.state === "suspended") {
+        void context.resume().then(() => {
+          scheduleMusic();
+        }).catch(() => {});
+      } else {
+        scheduleMusic();
+      }
+    }
+  }
+
+  function handleVisibilityChange() {
+    if (document.hidden) {
+      suspendAudio();
+    } else {
+      resumeAudio();
+    }
+  }
+
+  function handleWindowBlur() {
+    suspendAudio();
+  }
+
+  function handleWindowFocus() {
+    resumeAudio();
+  }
+
+  if (typeof document !== "undefined") {
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+  }
+  if (typeof window !== "undefined") {
+    window.addEventListener("pagehide", handleWindowBlur);
+    window.addEventListener("blur", handleWindowBlur);
+    window.addEventListener("focus", handleWindowFocus);
+  }
+
   return {
     unlock() {
       if (!audioHandle) return;
       void audioHandle.unlock().then(() => {
-        if (!started) {
-          started = true;
-          scheduleMusic();
+        started = true;
+        if (isPlaying && !document.hidden) {
+          resumeAudio();
         }
       }).catch(() => {});
+    },
+    startMusic() {
+      isPlaying = true;
+      musicStep = 0;
+      resumeAudio();
+    },
+    stopMusic() {
+      isPlaying = false;
+      window.clearTimeout(musicTimer);
+      stopActiveNodes();
     },
     setMusicVolume(value) {
       volume = value;
@@ -65,6 +134,12 @@ export function createAudioController(audioHandle, initialVolume) {
     toggleMuted() {
       muted = !muted;
       if (master && context) master.gain.setTargetAtTime(muted ? 0 : 0.8, context.currentTime, 0.03);
+      if (muted) {
+        window.clearTimeout(musicTimer);
+        stopActiveNodes();
+      } else if (isPlaying && !document.hidden) {
+        resumeAudio();
+      }
       return muted;
     },
     cast() {
@@ -102,9 +177,20 @@ export function createAudioController(audioHandle, initialVolume) {
     },
     destroy() {
       started = false;
+      isPlaying = false;
       window.clearTimeout(musicTimer);
-      active.forEach((node) => node.stop?.());
-      active.clear();
+      stopActiveNodes();
+      if (typeof document !== "undefined") {
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
+      }
+      if (typeof window !== "undefined") {
+        window.removeEventListener("pagehide", handleWindowBlur);
+        window.removeEventListener("blur", handleWindowBlur);
+        window.removeEventListener("focus", handleWindowFocus);
+      }
+      if (context && context.state === "running") {
+        void context.suspend().catch(() => {});
+      }
     },
   };
 }

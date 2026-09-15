@@ -56,8 +56,6 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
       };
       const sound = createAudioController(audio, config.musicVolume);
 
-      let lastValidationToken = null;
-
       const events = {
         onCast: () => sound.cast(),
         onReel: () => sound.reel(),
@@ -89,7 +87,7 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
           if (sdk.device.haptics.isSupported()) void sdk.device.haptics.vibrate([18, 32, 18]).catch(() => { });
         },
         onEnd: (score, validationToken) => {
-          lastValidationToken = validationToken;
+          sound.stopMusic();
           const lbData = recordScore(score, validationToken, (updatedLbData) => {
             if (!simulation?.state.running && ui.isResultsOpen()) {
               ui.showResults(updatedLbData);
@@ -146,6 +144,7 @@ export function createGame({ mount, sdk, tweaks, assets, saved, audio }) {
         ui.closeGuide();
         simulation.reset();
         ui.showHint();
+        sound.startMusic();
         lastTime = performance.now();
       }
 
