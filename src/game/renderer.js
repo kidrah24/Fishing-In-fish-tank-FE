@@ -24,10 +24,15 @@ function drawFallbackFish(ctx, fish, alpha = 1) {
               ? "#ff6b9a"
               : "#5fb7ff";
   const accentColor = behavior === "ghost" ? "#ffffff" : "#0f3d53";
+  const facingDir = fish.direction >= 0 ? 1 : -1;
+  const pitch = fish.angle || 0;
+  const wiggle = Math.sin((fish.phase || 0) * 1.8) * 0.04;
+
   ctx.save();
   ctx.globalAlpha = alpha;
   ctx.translate(fish.x, fish.y);
-  ctx.scale(fish.direction, 1);
+  ctx.scale(facingDir, 1);
+  ctx.rotate(pitch + wiggle);
   ctx.fillStyle = bodyColor;
   ctx.strokeStyle = accentColor;
   ctx.lineWidth = Math.max(1.2, size * 0.05);
@@ -67,14 +72,16 @@ function drawFishSprite(ctx, image, fish, frameIndex = 0, numCols = 2, numRows =
   
   const targetSize = fish.size * (fish.renderScale || 1);
   const scale = targetSize / frameW;
-  const facingDir = fish.facing || fish.direction || 1;
-  const tiltAngle = (fish.vy || 0) * 0.003 * facingDir + Math.sin(fish.phase || 0) * 0.05;
+  const facingDir = fish.direction >= 0 ? 1 : -1;
+  const pitch = fish.angle || 0;
+  const wiggle = Math.sin((fish.phase || 0) * 1.8) * 0.04;
+  const totalRotation = pitch + wiggle;
 
   ctx.save();
   ctx.globalAlpha = alpha;
   ctx.translate(fish.x, fish.y);
-  ctx.scale(facingDir >= 0 ? 1 : -1, 1);
-  ctx.rotate(tiltAngle);
+  ctx.scale(facingDir, 1);
+  ctx.rotate(totalRotation);
   ctx.drawImage(
     image,
     cropX, cropY, frameW, frameH,

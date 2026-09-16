@@ -68,12 +68,12 @@ export function createSimulation(config, events) {
       species,
       direction,
       targetDirection: direction,
-      scaleX: direction,
       size: sizeBase * species.size * random(0.95, 1.05),
       x: fromEdge ? (direction > 0 ? -120 : state.width + 120) : random(50, Math.max(51, state.width - 50)),
       y: species.behavior === "crab" ? bottom : random(state.height * 0.28, state.height * 0.76),
       vx: direction * species.speed * random(0.9, 1.1),
       vy: random(-10, 10),
+      angle: 0,
       phase: random(0, Math.PI * 2),
       speedScale: random(0.88, 1.14),
       caught: false,
@@ -361,8 +361,8 @@ export function createSimulation(config, events) {
         fish.x += (state.hook.x - fish.x) * Math.min(1, dt * 10);
         fish.y = state.hook.y + fish.size * 0.42;
         fish.targetDirection = state.hook.x >= fish.x ? 1 : -1;
-        const targetScaleX = fish.targetDirection;
-        fish.scaleX = (fish.scaleX !== undefined ? fish.scaleX : fish.targetDirection) + (targetScaleX - (fish.scaleX !== undefined ? fish.scaleX : fish.targetDirection)) * Math.min(1, dt * 6);
+        fish.direction = fish.targetDirection;
+        fish.angle = 0;
         return;
       }
       fish.phase += dt * (fish.species.behavior === "rainbow" ? 3.0 : 1.8);
@@ -454,11 +454,17 @@ export function createSimulation(config, events) {
       fish.vx = (fish.vx || targetVx) + (targetVx - (fish.vx || targetVx)) * accelX;
       fish.vy = (fish.vy || targetVy) + (targetVy - (fish.vy || targetVy)) * accelY;
 
-      // Smooth 3D turn-around scale interpolation
-      const desiredScaleX = fish.vx >= 0 ? 1 : -1;
-      if (fish.scaleX === undefined) fish.scaleX = desiredScaleX;
-      fish.scaleX += (desiredScaleX - fish.scaleX) * Math.min(1, dt * 5.5);
-      fish.direction = fish.scaleX >= 0 ? 1 : -1;
+      // Clean 2D direction update (no 3D card flip)
+      if (Math.abs(fish.vx) > 6) {
+        fish.direction = fish.vx >= 0 ? 1 : -1;
+      } else if (fish.targetDirection) {
+        fish.direction = fish.targetDirection;
+      }
+
+      // Smooth 2D swim pitch angle (clamped to natural swimming inclination)
+      const targetAngle = behavior === "crab" ? 0 : Math.max(-0.45, Math.min(0.45, Math.atan2(fish.vy, Math.abs(fish.vx))));
+      if (fish.angle === undefined) fish.angle = targetAngle;
+      fish.angle += (targetAngle - fish.angle) * Math.min(1, dt * 8.0);
 
       // Position update
       fish.x += (fish.vx || 0) * dt;
@@ -471,8 +477,8 @@ export function createSimulation(config, events) {
       }
 
       const screenMargin = fish.size * fish.renderScale * 0.9;
-      if (desiredScaleX > 0 && fish.x > state.width + screenMargin) fish.x = -screenMargin;
-      if (desiredScaleX < 0 && fish.x < -screenMargin) fish.x = state.width + screenMargin;
+      if (fish.direction > 0 && fish.x > state.width + screenMargin) fish.x = -screenMargin;
+      if (fish.direction < 0 && fish.x < -screenMargin) fish.x = state.width + screenMargin;
       fish.y = Math.max(surfaceY() + fish.size * 0.5, Math.min(state.height * 0.88, fish.y));
     });
   }
