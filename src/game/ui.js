@@ -26,16 +26,16 @@ export function createUI(shell) {
 
       <!-- Animated Swimming Aquarium Fish Decor -->
       <div class="loader-swimming-fish fish-shark">
-        <img src="/generated-assets/assets/mini_shark.png" alt="Shark" />
+        <img src="generated-assets/assets/mini_shark.png" alt="Shark" />
       </div>
       <div class="loader-swimming-fish fish-rainbow">
-        <img src="/generated-assets/assets/rainbow_fish.png" alt="Rainbow Fish" />
+        <img src="generated-assets/assets/rainbow_fish.png" alt="Rainbow Fish" />
       </div>
       <div class="loader-swimming-fish fish-puffer">
-        <img src="/generated-assets/assets/puffer_fish.png" alt="Puffer Fish" />
+        <img src="generated-assets/assets/puffer_fish.png" alt="Puffer Fish" />
       </div>
       <div class="loader-swimming-fish fish-tang">
-        <img src="/generated-assets/assets/lemon_tang.png" alt="Lemon Tang" />
+        <img src="generated-assets/assets/lemon_tang.png" alt="Lemon Tang" />
       </div>
 
       <!-- Full Screen Rising Water Level -->
@@ -165,7 +165,7 @@ export function createUI(shell) {
           <!-- Section: Tricky & Uncatchable Fish -->
           <div class="guide-section" data-section="tricky">
             <div class="fish-card danger">
-              <img src="/generated-assets/assets/crab.png" alt="Bait Crab" class="fish-icon" />
+              <img src="generated-assets/assets/crab.png" alt="Bait Crab" class="fish-icon" />
               <div class="fish-info">
                 <div class="fish-title-row">
                   <strong>Bait Crab</strong>
@@ -175,7 +175,7 @@ export function createUI(shell) {
               </div>
             </div>
             <div class="fish-card warning">
-              <img src="/generated-assets/assets/electric_fish.png" alt="Electric Fish" class="fish-icon" />
+              <img src="generated-assets/assets/electric_fish.png" alt="Electric Fish" class="fish-icon" />
               <div class="fish-info">
                 <div class="fish-title-row">
                   <strong>Electric Fish</strong>
@@ -185,7 +185,7 @@ export function createUI(shell) {
               </div>
             </div>
             <div class="fish-card special">
-              <img src="/generated-assets/assets/ghost_fish.png" alt="Ghost Fish" class="fish-icon" />
+              <img src="generated-assets/assets/ghost_fish.png" alt="Ghost Fish" class="fish-icon" />
               <div class="fish-info">
                 <div class="fish-title-row">
                   <strong>Ghost Fish</strong>
@@ -195,7 +195,7 @@ export function createUI(shell) {
               </div>
             </div>
             <div class="fish-card warning">
-              <img src="/generated-assets/assets/puffer_fish.png" alt="Puffer Fish" class="fish-icon" />
+              <img src="generated-assets/assets/puffer_fish.png" alt="Puffer Fish" class="fish-icon" />
               <div class="fish-info">
                 <div class="fish-title-row">
                   <strong>Puffer Fish</strong>
@@ -205,7 +205,7 @@ export function createUI(shell) {
               </div>
             </div>
             <div class="fish-card warning">
-              <img src="/generated-assets/assets/angry_fish.png" alt="Angry Fish" class="fish-icon" />
+              <img src="generated-assets/assets/angry_fish.png" alt="Angry Fish" class="fish-icon" />
               <div class="fish-info">
                 <div class="fish-title-row">
                   <strong>Angry Fish</strong>
@@ -215,7 +215,7 @@ export function createUI(shell) {
               </div>
             </div>
             <div class="fish-card info">
-              <img src="/generated-assets/assets/mini_shark.png" alt="Mini Shark" class="fish-icon" />
+              <img src="generated-assets/assets/mini_shark.png" alt="Mini Shark" class="fish-icon" />
               <div class="fish-info">
                 <div class="fish-title-row">
                   <strong>Mini Shark</strong>
@@ -230,63 +230,63 @@ export function createUI(shell) {
           <div class="guide-section" data-section="points">
             <div class="points-grid">
               <div class="point-item jackpot">
-                <img src="/generated-assets/assets/pirate_treasure.png" alt="Treasure" />
+                <img src="generated-assets/assets/pirate_treasure.png" alt="Treasure" />
                 <div class="p-details"><strong>Pirate Chest</strong><span class="p-pts gold">+400 PTS</span></div>
               </div>
               <div class="point-item">
-                <img src="/generated-assets/assets/ghost_fish.png" alt="Ghost Fish" />
+                <img src="generated-assets/assets/ghost_fish.png" alt="Ghost Fish" />
                 <div class="p-details"><strong>Ghost Fish</strong><span class="p-pts purple">220 PTS</span></div>
               </div>
               <div class="point-item">
-                <img src="/generated-assets/assets/mini_shark.png" alt="Mini Shark" />
+                <img src="generated-assets/assets/mini_shark.png" alt="Mini Shark" />
                 <div class="p-details"><strong>Mini Shark</strong><span class="p-pts">190 PTS</span></div>
               </div>
               <div class="point-item">
-                <img src="/generated-assets/assets/pearl_koi.png" alt="Pearl Koi" />
+                <img src="generated-assets/assets/pearl_koi.png" alt="Pearl Koi" />
                 <div class="p-details"><strong>Pearl Koi</strong><span class="p-pts">160 PTS</span></div>
               </div>
               <div class="point-item">
-                <img src="/generated-assets/assets/puffer_fish.png" alt="Puffer Fish" />
+                <img src="generated-assets/assets/puffer_fish.png" alt="Puffer Fish" />
                 <div class="p-details"><strong>Puffer Fish</strong><span class="p-pts">150 PTS</span></div>
               </div>
               <div class="point-item">
-                <img src="/generated-assets/assets/electric_fish.png" alt="Electric Fish" />
+                <img src="generated-assets/assets/electric_fish.png" alt="Electric Fish" />
                 <div class="p-details"><strong>Electric Fish</strong><span class="p-pts cyan">140 PTS</span></div>
               </div>
               <div class="point-item">
-                <img src="/generated-assets/assets/royal_beta.png" alt="Royal Betta" />
+                <img src="generated-assets/assets/royal_beta.png" alt="Royal Betta" />
                 <div class="p-details"><strong>Royal Betta</strong><span class="p-pts">120 PTS</span></div>
               </div>
               <div class="point-item">
-                <img src="/generated-assets/assets/angry_fish.png" alt="Angry Fish" />
+                <img src="generated-assets/assets/angry_fish.png" alt="Angry Fish" />
                 <div class="p-details"><strong>Angry Fish</strong><span class="p-pts">120 PTS</span></div>
               </div>
               <div class="point-item">
-                <img src="/generated-assets/assets/timid_fish.png" alt="Timid Fish" />
+                <img src="generated-assets/assets/timid_fish.png" alt="Timid Fish" />
                 <div class="p-details"><strong>Timid Fish</strong><span class="p-pts">90 PTS</span></div>
               </div>
               <div class="point-item">
-                <img src="/generated-assets/assets/rainbow_fish.png" alt="Rainbow Fish" />
+                <img src="generated-assets/assets/rainbow_fish.png" alt="Rainbow Fish" />
                 <div class="p-details"><strong>Rainbow Fish</strong><span class="p-pts rainbow">40 - 240 PTS</span></div>
               </div>
               <div class="point-item">
-                <img src="/generated-assets/assets/ember_fish.png" alt="Ember Goldfish" />
+                <img src="generated-assets/assets/ember_fish.png" alt="Ember Goldfish" />
                 <div class="p-details"><strong>Ember Goldfish</strong><span class="p-pts">75 PTS</span></div>
               </div>
               <div class="point-item">
-                <img src="/generated-assets/assets/lemon_tang.png" alt="Lemon Tang" />
+                <img src="generated-assets/assets/lemon_tang.png" alt="Lemon Tang" />
                 <div class="p-details"><strong>Lemon Tang</strong><span class="p-pts">60 PTS</span></div>
               </div>
               <div class="point-item">
-                <img src="/generated-assets/assets/school_fish.png" alt="School Fish" />
+                <img src="generated-assets/assets/school_fish.png" alt="School Fish" />
                 <div class="p-details"><strong>School Fish</strong><span class="p-pts">55 PTS</span></div>
               </div>
               <div class="point-item">
-                <img src="/generated-assets/assets/neon_tetra.png" alt="Neon Tetra" />
+                <img src="generated-assets/assets/neon_tetra.png" alt="Neon Tetra" />
                 <div class="p-details"><strong>Neon Tetra</strong><span class="p-pts">40 PTS</span></div>
               </div>
               <div class="point-item danger">
-                <img src="/generated-assets/assets/crab.png" alt="Bait Crab" />
+                <img src="generated-assets/assets/crab.png" alt="Bait Crab" />
                 <div class="p-details"><strong>Bait Crab</strong><span class="p-pts danger">0 PTS (BAIT THIEF)</span></div>
               </div>
             </div>
