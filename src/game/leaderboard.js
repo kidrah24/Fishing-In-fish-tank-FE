@@ -330,7 +330,7 @@ export async function fetchGlobalLeaderboard(currentScore = 0) {
           ownerToken: e.ownerToken,
           sig: e.sig || computeEntrySig(e.name, e.score, e.ownerToken),
         }));
-        void putToCloudWithRetry(cleanCloudPayload).catch(() => {});
+        void putToCloudWithRetry(cleanCloudPayload).catch(() => { });
       }
 
       return formatLeaderboardState(merged, currentScore);
@@ -495,7 +495,7 @@ export function recordScore(score, validationToken, onCloudSync) {
   saveLeaderboard(merged);
   const initialState = formatLeaderboardState(merged, score);
 
-  void syncScoreToCloud(score, validationToken, onCloudSync).catch(() => {});
+  void syncScoreToCloud(score, validationToken, onCloudSync).catch(() => { });
 
   return initialState;
 }
