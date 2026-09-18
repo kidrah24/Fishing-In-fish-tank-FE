@@ -5,7 +5,6 @@ export function createUI(shell) {
       <div class="badge score-badge"><span class="hud-icon">★</span><span data-score>0</span></div>
       <div class="hud-actions">
         <div class="badge combo-badge" data-combo hidden>x2</div>
-        <button class="base-code-btn" type="button" aria-label="Base Builder Code" data-open-base-modal title="Base Onchain Attribution">🔵 Builder Code</button>
         <button class="guide-button" type="button" aria-label="Game Guide" data-open-guide title="Game Guide & Fish Points">📖</button>
         <button class="sound-button" type="button" aria-label="Mute sound" data-sound>♪</button>
         <div class="badge time-badge"><span data-time>60</span><span class="hud-unit">s</span></div>
@@ -298,55 +297,6 @@ export function createUI(shell) {
           <button class="guide-start-btn" type="button" data-guide-play>Play Game 🎣</button>
         </div>
       </div>
-    <!-- Base Builder Code Modal Overlay -->
-    <div class="builder-overlay" data-web3-modal hidden>
-      <div class="builder-card">
-        <div class="builder-header">
-          <h2>🔵 Base Builder Code Attribution</h2>
-          <button class="builder-close-btn" type="button" data-close-web3 aria-label="Close modal">✕</button>
-        </div>
-        
-        <div class="builder-body">
-          <div class="builder-status-banner">
-            <span class="status-indicator active">●</span>
-            <span>Attributing onchain activity on Base network</span>
-          </div>
-
-          <div class="builder-input-group">
-            <label for="builder-code-input">Builder Code (from base.dev)</label>
-            <div class="input-with-button">
-              <input type="text" id="builder-code-input" data-builder-code-input placeholder="e.g. bc_b7k3p9da" value="" />
-              <button type="button" data-update-builder-code class="btn-secondary">Update Code</button>
-            </div>
-          </div>
-
-          <div class="builder-info-box">
-            <div class="info-row">
-              <span class="info-label">Frameworks Integrated:</span>
-              <span class="info-value">Wagmi 3.x &amp; Viem 2.x</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Attribution Standard:</span>
-              <span class="info-value">ERC-8021 (ox/erc8021)</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Generated dataSuffix:</span>
-              <code class="data-suffix-code" data-datasuffix-display>0x...</code>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Verification Status:</span>
-              <span class="badge-tag tag-success" data-suffix-verify>✓ Valid ERC-8021 Suffix</span>
-            </div>
-          </div>
-
-          <div class="builder-tx-demo">
-            <h3>Onchain Transaction Attribution Test</h3>
-            <p>Send a transaction via Viem / Wagmi with automatic Builder Code dataSuffix appended:</p>
-            <button type="button" data-send-tx-demo class="start-play-btn">Simulate Attributed Tx 🚀</button>
-            <div class="tx-result-box" data-tx-result hidden></div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <div class="result-overlay" data-result hidden>
@@ -400,95 +350,6 @@ export function createUI(shell) {
         <div class="result-actions">
           <button class="replay-button" type="button" data-replay>Fish again 🎣</button>
           <button class="guide-button-secondary" type="button" data-open-guide>📖 Fish Guide</button>
-          <button class="base-button-secondary" type="button" data-open-base-modal>🔵 Base Attribution</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Base Builder Code Attribution Modal -->
-    <div class="base-modal-overlay" data-base-modal hidden>
-      <div class="base-modal-card">
-        <div class="base-modal-header">
-          <div class="base-title-group">
-            <span class="base-logo-badge">🔵 BASE</span>
-            <h2>Builder Code Attribution</h2>
-          </div>
-          <button class="base-close-btn" type="button" data-close-base-modal aria-label="Close modal">✕</button>
-        </div>
-
-        <div class="base-modal-tabs">
-          <button class="base-tab is-active" data-base-tab="overview" type="button">⚙️ Config &amp; Suffix</button>
-          <button class="base-tab" data-base-tab="tx" type="button">⚡ Send Tx on Base</button>
-          <button class="base-tab" data-base-tab="verify" type="button">🔍 Verify Attribution</button>
-        </div>
-
-        <div class="base-modal-content">
-          <!-- Section 1: Config & Suffix -->
-          <div class="base-section is-active" data-base-section="overview">
-            <div class="base-card-info">
-              <label class="base-label">ACTIVE BUILDER CODE</label>
-              <div class="base-input-row">
-                <input type="text" class="base-code-input" data-builder-code-input value="bc_b7k3p9da" placeholder="e.g. bc_b7k3p9da" />
-                <button type="button" class="base-update-btn" data-update-builder-code>Update Code</button>
-              </div>
-              <p class="base-help-text">Registered code from <a href="https://base.dev" target="_blank" rel="noopener">base.dev</a> (Settings → Builder Code)</p>
-            </div>
-
-            <div class="base-card-info">
-              <label class="base-label">GENERATED ERC-8021 DATA SUFFIX (HEX)</label>
-              <div class="suffix-code-block" data-suffix-hex-display>
-                0x62635f62376b33703964610b0080218021802180218021802180218021
-              </div>
-              <div class="suffix-badge-row">
-                <span class="suffix-pill">Standard: ERC-8021</span>
-                <span class="suffix-pill">Chain: Base Mainnet</span>
-                <span class="suffix-pill pill-highlight">16-Byte 8021 Trailing Pattern</span>
-              </div>
-            </div>
-
-            <div class="base-card-info">
-              <label class="base-label">INTEGRATION ARCHITECTURE</label>
-              <div class="status-grid">
-                <div class="status-item"><span class="status-dot green"></span> <strong>Wagmi Config:</strong> dataSuffix configured</div>
-                <div class="status-item"><span class="status-dot green"></span> <strong>Viem Client:</strong> dataSuffix configured</div>
-                <div class="status-item"><span class="status-dot green"></span> <strong>ox/erc8021:</strong> Attribution Suffix Generator</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Section 2: Send Tx on Base -->
-          <div class="base-section" data-base-section="tx">
-            <div class="wallet-status-bar" data-wallet-status-bar>
-              <span class="wallet-icon">👛</span>
-              <div class="wallet-info">
-                <strong data-wallet-address>Wallet Not Connected</strong>
-                <small data-wallet-network>Connect MetaMask / Coinbase Wallet</small>
-              </div>
-              <button class="wallet-connect-btn" type="button" data-connect-wallet>Connect Wallet</button>
-            </div>
-
-            <div class="tx-action-card">
-              <h3>Mint Angler Score Proof on Base</h3>
-              <p>Send an onchain transaction with Wagmi / Viem. Your Builder Code is automatically appended to attribute activity on Base.</p>
-              <div class="tx-details-row">
-                <span>Attribution Suffix:</span>
-                <code data-tx-suffix-preview>0x62635f...80218021</code>
-              </div>
-              <button class="send-tx-btn" type="button" data-send-attributed-tx>🚀 Send Attributed Transaction on Base</button>
-              <div class="tx-result-box" data-tx-result-box hidden></div>
-            </div>
-          </div>
-
-          <!-- Section 3: Verify Attribution -->
-          <div class="base-section" data-base-section="verify">
-            <div class="verify-card">
-              <label class="base-label">CHECK TRANSACTION ATTRIBUTION</label>
-              <p>Paste a transaction calldata or dataSuffix hex to decode the Builder Code and verify ERC-8021 compliance.</p>
-              <textarea class="verify-input" data-verify-input placeholder="Paste hex data (e.g. 0x62635f62376b33703964610b0080218021802180218021802180218021)..."></textarea>
-              <button class="verify-btn" type="button" data-run-verify>Check Attribution</button>
-              <div class="verify-result" data-verify-result-box hidden></div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
