@@ -1561,6 +1561,7 @@ button,
   }
 }
 
+<<<<<<< HEAD
 /* ==========================================================================
    Base Builder Code Attribution Styles
    ========================================================================== */
@@ -1619,10 +1620,43 @@ button,
   position: absolute;
   inset: 0;
   z-index: 120;
+=======
+/* Base Builder Codes UI Styling */
+.builder-code-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: clamp(38px, 6cqh, 48px);
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 82, 255, 0.4);
+  background: linear-gradient(135deg, rgba(0, 82, 255, 0.25), rgba(7, 61, 87, 0.6));
+  color: #70a5ff;
+  font-size: clamp(12px, 3.2cqw, 15px);
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 82, 255, 0.2);
+}
+
+.builder-code-button:hover {
+  background: linear-gradient(135deg, rgba(0, 82, 255, 0.45), rgba(7, 61, 87, 0.8));
+  border-color: #0052ff;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.builder-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+>>>>>>> bb0905bb5e75ede5cea4918ec2b3985f5bf8652f
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 16px;
+<<<<<<< HEAD
   background: rgba(0, 12, 24, 0.78);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -1683,18 +1717,75 @@ button,
   background: rgba(255, 255, 255, 0.08);
   color: #8cebd8;
   font-size: 14px;
+=======
+  background: rgba(3, 28, 41, 0.82);
+  backdrop-filter: blur(12px);
+  animation: result-in 0.25s ease-out;
+}
+
+.builder-card {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 24px;
+  border: 1px solid rgba(0, 82, 255, 0.35);
+  background: linear-gradient(170deg, #092640, #041424);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 82, 255, 0.15);
+  color: #e2f1ff;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.builder-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 14px;
+}
+
+.builder-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: #5bb0ff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.builder-close-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: #a0c4e8;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 16px;
+>>>>>>> bb0905bb5e75ede5cea4918ec2b3985f5bf8652f
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+<<<<<<< HEAD
   transition: background 0.15s ease;
 }
 
 .base-close-btn:hover {
+=======
+  transition: all 0.2s;
+}
+
+.builder-close-btn:hover {
+>>>>>>> bb0905bb5e75ede5cea4918ec2b3985f5bf8652f
   background: rgba(255, 255, 255, 0.2);
   color: #fff;
 }
 
+<<<<<<< HEAD
 /* Tabs */
 .base-modal-tabs {
   display: flex;
@@ -2093,4 +2184,5 @@ button,
   color: #ffb3b8;
   font-size: 12px;
 }
+
 
