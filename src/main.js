@@ -7,7 +7,16 @@ import "./posthog.js";
 import "./styles.css";
 
 try {
-  injectVercelAnalytics();
+  const vercelDomain = import.meta.env.VITE_VERCEL_URL;
+  if (vercelDomain && typeof window !== "undefined" && !window.location.hostname.includes("vercel.app")) {
+    const origin = vercelDomain.startsWith("http") ? vercelDomain : `https://${vercelDomain}`;
+    injectVercelAnalytics({
+      eventEndpoint: `${origin}/_vercel/insights/event`,
+      viewEndpoint: `${origin}/_vercel/insights/view`,
+    });
+  } else {
+    injectVercelAnalytics();
+  }
 } catch (err) {
   console.warn("Analytics initialization skipped:", err);
 }

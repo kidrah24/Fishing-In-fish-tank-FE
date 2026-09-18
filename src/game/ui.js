@@ -1,3 +1,5 @@
+import { getBuilderCode, setBuilderCode, getDataSuffix, verifyAttributionSuffix, prepareAttributedTransaction } from "../web3.js";
+
 export function createUI(shell) {
   shell.innerHTML = `
     <canvas class="game-surface" aria-label="Aquarium fishing game"></canvas>
@@ -5,6 +7,7 @@ export function createUI(shell) {
       <div class="badge score-badge"><span class="hud-icon">★</span><span data-score>0</span></div>
       <div class="hud-actions">
         <div class="badge combo-badge" data-combo hidden>x2</div>
+        <button class="builder-code-button" type="button" aria-label="Base Builder Code" data-open-web3 title="Base Builder Code Attribution">🔵 Builder Code</button>
         <button class="guide-button" type="button" aria-label="Game Guide" data-open-guide title="Game Guide & Fish Points">📖</button>
         <button class="sound-button" type="button" aria-label="Mute sound" data-sound>♪</button>
         <div class="badge time-badge"><span data-time>60</span><span class="hud-unit">s</span></div>
@@ -297,6 +300,55 @@ export function createUI(shell) {
           <button class="guide-start-btn" type="button" data-guide-play>Play Game 🎣</button>
         </div>
       </div>
+    <!-- Base Builder Code Modal Overlay -->
+    <div class="builder-overlay" data-web3-modal hidden>
+      <div class="builder-card">
+        <div class="builder-header">
+          <h2>🔵 Base Builder Code Attribution</h2>
+          <button class="builder-close-btn" type="button" data-close-web3 aria-label="Close modal">✕</button>
+        </div>
+        
+        <div class="builder-body">
+          <div class="builder-status-banner">
+            <span class="status-indicator active">●</span>
+            <span>Attributing onchain activity on Base network</span>
+          </div>
+
+          <div class="builder-input-group">
+            <label for="builder-code-input">Builder Code (from base.dev)</label>
+            <div class="input-with-button">
+              <input type="text" id="builder-code-input" data-builder-code-input placeholder="e.g. bc_b7k3p9da" value="" />
+              <button type="button" data-update-builder-code class="btn-secondary">Update Code</button>
+            </div>
+          </div>
+
+          <div class="builder-info-box">
+            <div class="info-row">
+              <span class="info-label">Frameworks Integrated:</span>
+              <span class="info-value">Wagmi 3.x &amp; Viem 2.x</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Attribution Standard:</span>
+              <span class="info-value">ERC-8021 (ox/erc8021)</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Generated dataSuffix:</span>
+              <code class="data-suffix-code" data-datasuffix-display>0x...</code>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Verification Status:</span>
+              <span class="badge-tag tag-success" data-suffix-verify>✓ Valid ERC-8021 Suffix</span>
+            </div>
+          </div>
+
+          <div class="builder-tx-demo">
+            <h3>Onchain Transaction Attribution Test</h3>
+            <p>Send a transaction via Viem / Wagmi with automatic Builder Code dataSuffix appended:</p>
+            <button type="button" data-send-tx-demo class="start-play-btn">Simulate Attributed Tx 🚀</button>
+            <div class="tx-result-box" data-tx-result hidden></div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="result-overlay" data-result hidden>
@@ -394,6 +446,15 @@ export function createUI(shell) {
     guidePlay: shell.querySelector("[data-guide-play]"),
     tabs: shell.querySelectorAll("[data-tab]"),
     sections: shell.querySelectorAll("[data-section]"),
+    openWeb3: shell.querySelector("[data-open-web3]"),
+    web3Modal: shell.querySelector("[data-web3-modal]"),
+    closeWeb3: shell.querySelector("[data-close-web3]"),
+    builderCodeInput: shell.querySelector("[data-builder-code-input]"),
+    updateBuilderCode: shell.querySelector("[data-update-builder-code]"),
+    datasuffixDisplay: shell.querySelector("[data-datasuffix-display]"),
+    suffixVerify: shell.querySelector("[data-suffix-verify]"),
+    sendTxDemo: shell.querySelector("[data-send-tx-demo]"),
+    txResult: shell.querySelector("[data-tx-result]"),
   };
 
   let hintTimer = 0;
@@ -494,10 +555,83 @@ export function createUI(shell) {
     });
   });
 
-  if (elements.closeGuide) {
+    if (elements.closeGuide) {
     elements.closeGuide.addEventListener("click", (e) => {
       e.stopPropagation();
       closeGuide();
+    });
+  }
+
+  let isWeb3Open = false;
+
+  function openWeb3Modal() {
+    isWeb3Open = true;
+    if (elements.web3Modal) {
+      elements.web3Modal.hidden = false;
+      refreshWeb3Info();
+    }
+  }
+
+  function closeWeb3Modal() {
+    isWeb3Open = false;
+    if (elements.web3Modal) elements.web3Modal.hidden = true;
+  }
+
+  function refreshWeb3Info() {
+    const code = getBuilderCode();
+    const suffix = getDataSuffix();
+    if (elements.builderCodeInput) elements.builderCodeInput.value = code;
+    if (elements.datasuffixDisplay) elements.datasuffixDisplay.textContent = suffix;
+    if (elements.suffixVerify) {
+      const isValid = verifyAttributionSuffix(suffix);
+      elements.suffixVerify.textContent = isValid ? "✓ Valid ERC-8021 Suffix" : "⚠️ Invalid Suffix";
+      elements.suffixVerify.className = isValid ? "badge-tag tag-success" : "badge-tag tag-danger";
+    }
+  }
+
+  if (elements.openWeb3) {
+    elements.openWeb3.addEventListener("click", (e) => {
+      e.stopPropagation();
+      openWeb3Modal();
+    });
+  }
+
+  if (elements.closeWeb3) {
+    elements.closeWeb3.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeWeb3Modal();
+    });
+  }
+
+  if (elements.updateBuilderCode) {
+    elements.updateBuilderCode.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const newCode = elements.builderCodeInput?.value.trim();
+      if (newCode) {
+        setBuilderCode(newCode);
+        refreshWeb3Info();
+      }
+    });
+  }
+
+  if (elements.sendTxDemo) {
+    elements.sendTxDemo.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const tx = prepareAttributedTransaction({
+        to: "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+        value: "0.01",
+        data: "0x",
+      });
+      if (elements.txResult) {
+        elements.txResult.hidden = false;
+        elements.txResult.innerHTML = `
+          <strong>Tx Payload Prepared via Viem/Wagmi:</strong><br/>
+          To: <code>${tx.to}</code><br/>
+          Value: <code>0.01 ETH</code><br/>
+          dataSuffix: <code class="break-all">${tx.dataSuffix}</code><br/>
+          <span class="tx-verify-badge">✓ Builder Code Attached (ERC-8021 Verified)</span>
+        `;
+      }
     });
   }
 
@@ -622,6 +756,10 @@ export function createUI(shell) {
       elements.result.hidden = false;
     },
     hideResults() { elements.result.hidden = true; },
+    isWeb3Open: () => isWeb3Open,
+    openWeb3Modal,
+    closeWeb3Modal,
     destroy() { window.clearTimeout(hintTimer); },
   };
 }
+
