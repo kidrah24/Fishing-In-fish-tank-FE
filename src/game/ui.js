@@ -816,9 +816,6 @@ export function createUI(shell) {
       elements.result.hidden = false;
     },
     hideResults() { elements.result.hidden = true; },
-    isWeb3Open: () => isWeb3Open,
-    openWeb3Modal,
-    closeWeb3Modal,
     destroy() { window.clearTimeout(hintTimer); },
   };
 }
