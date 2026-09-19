@@ -394,28 +394,10 @@ export function createUI(shell) {
     guidePlay: shell.querySelector("[data-guide-play]"),
     tabs: shell.querySelectorAll("[data-tab]"),
     sections: shell.querySelectorAll("[data-section]"),
-    baseModal: shell.querySelector("[data-base-modal]"),
-    openBaseModals: shell.querySelectorAll("[data-open-base-modal]"),
-    closeBaseModal: shell.querySelector("[data-close-base-modal]"),
-    baseTabs: shell.querySelectorAll("[data-base-tab]"),
-    baseSections: shell.querySelectorAll("[data-base-section]"),
-    builderCodeInput: shell.querySelector("[data-builder-code-input]"),
-    updateBuilderCodeBtn: shell.querySelector("[data-update-builder-code]"),
-    suffixHexDisplay: shell.querySelector("[data-suffix-hex-display]"),
-    txSuffixPreview: shell.querySelector("[data-tx-suffix-preview]"),
-    connectWalletBtn: shell.querySelector("[data-connect-wallet]"),
-    walletAddressLabel: shell.querySelector("[data-wallet-address]"),
-    walletNetworkLabel: shell.querySelector("[data-wallet-network]"),
-    sendAttributedTxBtn: shell.querySelector("[data-send-attributed-tx]"),
-    txResultBox: shell.querySelector("[data-tx-result-box]"),
-    verifyInput: shell.querySelector("[data-verify-input]"),
-    runVerifyBtn: shell.querySelector("[data-run-verify]"),
-    verifyResultBox: shell.querySelector("[data-verify-result-box]"),
   };
 
   let hintTimer = 0;
   let isGuideOpen = false;
-  let isBaseModalOpen = false;
   let currentLbData = null;
   let activeLbTab = "top";
 
@@ -426,16 +408,6 @@ export function createUI(shell) {
       const targetSection = tab.dataset.tab;
       elements.tabs.forEach((t) => t.classList.toggle("is-active", t === tab));
       elements.sections.forEach((s) => s.classList.toggle("is-active", s.dataset.section === targetSection));
-    });
-  });
-
-  // Tab switching handler for Base Modal
-  elements.baseTabs.forEach((tab) => {
-    tab.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const targetSection = tab.dataset.baseTab;
-      elements.baseTabs.forEach((t) => t.classList.toggle("is-active", t === tab));
-      elements.baseSections.forEach((s) => s.classList.toggle("is-active", s.dataset.baseSection === targetSection));
     });
   });
 
@@ -515,16 +487,6 @@ export function createUI(shell) {
     elements.guide.hidden = true;
   }
 
-  function openBaseModal() {
-    isBaseModalOpen = true;
-    if (elements.baseModal) elements.baseModal.hidden = false;
-  }
-
-  function closeBaseModal() {
-    isBaseModalOpen = false;
-    if (elements.baseModal) elements.baseModal.hidden = true;
-  }
-
   elements.openGuides.forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -532,36 +494,19 @@ export function createUI(shell) {
     });
   });
 
-    if (elements.closeGuide) {
+  if (elements.closeGuide) {
     elements.closeGuide.addEventListener("click", (e) => {
       e.stopPropagation();
       closeGuide();
     });
   }
 
-  elements.openBaseModals.forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      openBaseModal();
-    });
-  });
-
-  if (elements.closeBaseModal) {
-    elements.closeBaseModal.addEventListener("click", (e) => {
-      e.stopPropagation();
-      closeBaseModal();
-    });
-  }
-
   return {
     elements,
     isGuideOpen: () => isGuideOpen,
-    isBaseModalOpen: () => isBaseModalOpen,
     isResultsOpen: () => !elements.result.hidden,
     openGuide,
     closeGuide,
-    openBaseModal,
-    closeBaseModal,
     getStartNameInput() { return elements.startNameInput?.value.trim() || ""; },
     setStartNameInput(val) { if (elements.startNameInput) elements.startNameInput.value = val; },
     setLoadingProgress(pct) {

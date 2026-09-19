@@ -15,7 +15,7 @@ export const SPECIES = [
   { name: "pearl_koi", label: "Pearl Koi", points: 160, speed: 31, size: 1.16, sheet: "normal" },
 ];
 
-export const RAINBOW_VALUES = [40, 80, 160, 240];
+const RAINBOW_VALUES = [40, 80, 160, 240];
 
 export function rainbowValue(elapsed) {
   return RAINBOW_VALUES[Math.floor(elapsed * 2.4) % RAINBOW_VALUES.length];
